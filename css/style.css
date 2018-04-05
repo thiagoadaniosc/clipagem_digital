@@ -1,0 +1,67 @@
+body,
+html {
+    height: 100%;
+}
+
+body {
+    background-image: url('../img/laptop_macbook_iphone_apple_journal_glasses_113949_3840x2160.jpg') !important;
+    background-repeat: repeat-y;
+    background-attachment: fixed;
+    background-size: cover;
+}
+
+.formBody {
+    position: relative;
+    top: 50px;
+    padding: 1rem;
+    margin: 0 auto;
+    border: 1px solid #d4d4d4;
+    border-left: 10px solid #408ddb;
+    background-color: white;
+    margin-bottom: 50px;
+}
+
+.menuBody {
+    position: relative;
+    top: 50px;
+    padding: 1rem;
+    margin: 0 auto;
+    border: 1px solid #d4d4d4;
+    border-left: 10px solid #408ddb;
+    background-color: white
+}
+
+.baseBody {
+    position: relative;
+    top: 50px;
+    padding: 1rem;
+    margin: 0 auto;
+    border: 1px solid #d4d4d4;
+    border-left: 10px solid #408ddb;
+    background-color: white;
+    margin-bottom: 50px;
+}
+
+.formBody h1 {
+    margin-top: 20px;
+    margin-bottom: 40px;
+    /*color: #0b6bcc;*/
+    color: #96725A;
+}
+
+input {
+    border-radius: 0 !important;
+    height: 50px !important;
+}
+
+.btn-file {
+    padding: 24px;
+}
+
+.bootstrap-tagsinput {
+    border-radius: 0;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    padding: .375rem .75rem;
+}

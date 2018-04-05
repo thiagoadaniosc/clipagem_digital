@@ -1,0 +1,6 @@
+.phpintel
+.vscode
+vendor/
+uploads/
+uploads_bkp/
+pesquisas/

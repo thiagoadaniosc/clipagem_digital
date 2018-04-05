@@ -1,0 +1,128 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "bfbe94f44cbb2fd779931b473d9562c9",
+    "packages": [
+        {
+            "name": "clegginabox/pdf-merger",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/clegginabox/pdf-merger.git",
+                "reference": "88e641ca2aa732b4f05e423a8ebc662af495e6ad"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/clegginabox/pdf-merger/zipball/88e641ca2aa732b4f05e423a8ebc662af495e6ad",
+                "reference": "88e641ca2aa732b4f05e423a8ebc662af495e6ad",
+                "shasum": ""
+            },
+            "require": {
+                "itbz/fpdi": "dev-master"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "src/PDFMerger/PDFMerger.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "authors": [
+                {
+                    "name": "Paul Clegg",
+                    "email": "paul@clegginabox.co.uk"
+                }
+            ],
+            "description": "PDF File Merger for PHP5",
+            "time": "2016-10-13T11:57:21+00:00"
+        },
+        {
+            "name": "itbz/fpdf",
+            "version": "1.7.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mreg-archive/fpdf.git",
+                "reference": "63340096907ef7525a9002d1ae3d0fd1ff376a6d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mreg-archive/fpdf/zipball/63340096907ef7525a9002d1ae3d0fd1ff376a6d",
+                "reference": "63340096907ef7525a9002d1ae3d0fd1ff376a6d",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "fpdf": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "no usage restriction"
+            ],
+            "description": "Unofficial PSR-0 compliant version of the FPDF library",
+            "homepage": "http://www.fpdf.org/",
+            "abandoned": "setasign/fpdf",
+            "time": "2016-05-27T09:02:54+00:00"
+        },
+        {
+            "name": "itbz/fpdi",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mreg-archive/fpdi.git",
+                "reference": "43f6bb7ce4094b7c21543da1a14782bb79999d26"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mreg-archive/fpdi/zipball/43f6bb7ce4094b7c21543da1a14782bb79999d26",
+                "reference": "43f6bb7ce4094b7c21543da1a14782bb79999d26",
+                "shasum": ""
+            },
+            "require": {
+                "itbz/fpdf": "~1.7",
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "hanneskod/classtools": "~1.0",
+                "nikic/php-parser": "~1.0",
+                "phpunit/phpunit": "4.*",
+                "symfony/finder": "~2.3",
+                "tecnickcom/tcpdf": "^6.2.12"
+            },
+            "suggest": {
+                "tecnickcom/tcpdf": "FPDI supports TCPDF as a replacement for FPDF"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "fpdi\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Unofficial PSR-4 compliant version of the FPDI library",
+            "abandoned": "setasign/fpdi",
+            "time": "2017-10-25T22:08:02+00:00"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": {
+        "itbz/fpdi": 20,
+        "clegginabox/pdf-merger": 20
+    },
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": [],
+    "platform-dev": []
+}

@@ -1,0 +1,6 @@
+{
+    "require": {
+        "itbz/fpdi": "dev-master",
+        "clegginabox/pdf-merger": "dev-master"
+    }
+}
