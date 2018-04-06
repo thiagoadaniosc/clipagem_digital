@@ -14,9 +14,9 @@
             <input class="form-control mt-4" type="password" name="senha" placeholder="Senha..." required="true">
             <div>
             <a href="http://intranet.cmsj.info">
-            <input class="form-control mt-4 btn btn-danger col-xl-5 col-lg-5 float-left" type="button" name="" id="voltar" value="VOLTAR">
+            <button class="form-control mt-4 btn btn-danger col-xl-5 col-lg-5 float-left" type="button" name="" id="voltar" style="border-radius: 0 !important; height: 50px !important;"> <i class="fa fa-reply"></i> VOLTAR  </button>
             </a>
-            <input class="form-control mt-4 btn btn-primary col-xl-5 col-lg-5 float-right" type="submit" name="" id="entrar" value="ENTRAR">
+            <button class="form-control mt-4 btn btn-primary col-xl-5 col-lg-5 float-right" type="submit" name="" id="entrar" style="border-radius: 0 !important; height: 50px !important;">ENTRAR <i class="fa fa-sign-in" ></i> </button>
             </div>
         </div>
     </form>
