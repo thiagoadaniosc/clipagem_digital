@@ -19,7 +19,7 @@ class FUNCTIONS {
     }
     
     public static function cadastrarClipagem() {
-        
+
         $conexao = mysqlCon();
         
         $titulo = $_POST['titulo'];
@@ -104,9 +104,9 @@ class FUNCTIONS {
         atualizarClipagem($conexao,$id, $titulo, $veiculo, $editoria, $autor, $data, $pagina, $tipo, $tags);
         
         if (empty($_FILES['file']['name'][0])== false) {
-            
-            
-            
+
+
+
             foreach ($_FILES['file']['tmp_name'] as $tempFile){
                 $pdf->addPDF($tempFile, 'all');        
                 echo $tempFile;
@@ -155,7 +155,7 @@ class FUNCTIONS {
         
         return $lista;
     }
-        
+
     public static function totalRegClipagens(){
         $conexao = mysqlCon();
         $totalReg = getNumRows($conexao);
@@ -215,7 +215,7 @@ class FUNCTIONS {
             $fileName = $_SESSION['usuario']. '_' . 'pesquisa.pdf';
             foreach($_SESSION['arquivos'] as $arquivo){
                 if(file_exists('uploads/' . $arquivo)) {
-                $pdf->addPDF('uploads'. DIRECTORY_SEPARATOR . $arquivo, 'all');
+                    $pdf->addPDF('uploads'. DIRECTORY_SEPARATOR . $arquivo, 'all');
                 }
             }
             $pdf->merge('file', 'pesquisas'. DIRECTORY_SEPARATOR . $fileName);
@@ -255,45 +255,45 @@ class FUNCTIONS {
         $dn="DC=ad,DC=cmsj,DC=sc,DC=gov,DC=br";
         // Tenta se conectar com o servidor
         //try {
-            $connect = ldap_connect($ldap_server, $ldapport) or die('erro');
-            ldap_set_option($connect, LDAP_OPT_PROTOCOL_VERSION, 3);
-            ldap_set_option($connect, LDAP_OPT_REFERRALS, 0);
-            
-            if($connect != null) {
-                echo 'Conectado ao Servidor <br>';
-                if ($result = ldap_bind($connect, 'AD-CMSJ\\' . $user, $pass)) {
-                    
-                    $_SESSION['login'] = true;
-                    $_SESSION['usuario'] = $user;
-                    
-                    
-                    $filter="(samaccountname=$user)";
-                    
-                    $res = ldap_search($connect, $dn, $filter);
-                    
-                    $entries = ldap_get_entries($connect, $res);
-                    
-                    $_SESSION['nome'] = $entries[0]['cn'][0];
-                    
-                    $isComunicacao = preg_grep("/^.*Comunicação.*/", $entries[0]['memberof']);
-                    
-                    
-                    if ($isComunicacao != null) {
-                        $_SESSION['admin'] = true;
-                        echo 'É Comunicação';
-                    } else {
-                        $_SESSION['admin'] = false;
-                    }
-                    echo 'Logado';
-                    header('Location: /');
+        $connect = ldap_connect($ldap_server, $ldapport) or die('erro');
+        ldap_set_option($connect, LDAP_OPT_PROTOCOL_VERSION, 3);
+        ldap_set_option($connect, LDAP_OPT_REFERRALS, 0);
+
+        if($connect != null) {
+            echo 'Conectado ao Servidor <br>';
+            if ($result = ldap_bind($connect, 'AD-CMSJ\\' . $user, $pass)) {
+
+                $_SESSION['login'] = true;
+                $_SESSION['usuario'] = $user;
+
+
+                $filter="(samaccountname=$user)";
+
+                $res = ldap_search($connect, $dn, $filter);
+
+                $entries = ldap_get_entries($connect, $res);
+
+                $_SESSION['nome'] = $entries[0]['cn'][0];
+
+                $isComunicacao = preg_grep("/^.*Comunicação.*/", $entries[0]['memberof']);
+
+
+                if ($isComunicacao != null) {
+                    $_SESSION['admin'] = true;
+                    echo 'É Comunicação';
                 } else {
-                    echo 'deslogado';
-                    header('Location: /login?login=false');
+                    $_SESSION['admin'] = false;
                 }
+                echo 'Logado';
+                header('Location: /');
             } else {
-                echo 'Problema na Conexão';
-                exit;
+                echo 'deslogado';
+                header('Location: /login?login=false');
             }
+        } else {
+            echo 'Problema na Conexão';
+            exit;
+        }
             /* } catch(Exception $e){
                 echo 'Erro ao Conectar';
                 exit;
@@ -323,48 +323,105 @@ class FUNCTIONS {
             }
             */
         }
-        
-        public static function logon(){
-            session_destroy();
-        }
-        
-        public static function getHeader(){
-            require_once 'includes' . DIRECTORY_SEPARATOR . 'header.php';
-        }
-        
-        public static function getFooter(){
-            $request_uri = explode("?",$_SERVER['REQUEST_URI']);
-            $request_uri = $request_uri[0];
-            global $request_uri;
-            if ($request_uri == '/editar') {
-                
-                global $clipagem;       
-            }
-            
-            
-            require_once 'includes' . DIRECTORY_SEPARATOR . 'footer.php';
-        }
-        
-        
-        
-        public static function fileExists($id, $nome){
+
+        public static function dbLogin($username, $password){
             $conexao = mysqlCon();
-            $arquivo = buscarArquivo($conexao, $id);
-            
-            if ($arquivo['nome'] == $nome) {
-                return true;
+            $user = getUser($conexao, $username, $password);
+            if ($user->num_rows == 1) {
+                var_dump($user->fetch_assoc());
             } else {
-                return false;
-            }            
+                header('Location: /login');
+            }
+
         }
-        public static function removeAccents($str) {
-            $a = array('À', 'Á', 'Â', 'Ã', 'Ä', 'Å', 'Æ', 'Ç', 'È', 'É', 'Ê', 'Ë', 'Ì', 'Í', 'Î', 'Ï', 'Ð', 'Ñ', 'Ò', 'Ó', 'Ô', 'Õ', 'Ö', 'Ø', 'Ù', 'Ú', 'Û', 'Ü', 'Ý', 'ß', 'à', 'á', 'â', 'ã', 'ä', 'å', 'æ', 'ç', 'è', 'é', 'ê', 'ë', 'ì', 'í', 'î', 'ï', 'ñ', 'ò', 'ó', 'ô', 'õ', 'ö', 'ø', 'ù', 'ú', 'û', 'ü', 'ý', 'ÿ', 'Ā', 'ā', 'Ă', 'ă', 'Ą', 'ą', 'Ć', 'ć', 'Ĉ', 'ĉ', 'Ċ', 'ċ', 'Č', 'č', 'Ď', 'ď', 'Đ', 'đ', 'Ē', 'ē', 'Ĕ', 'ĕ', 'Ė', 'ė', 'Ę', 'ę', 'Ě', 'ě', 'Ĝ', 'ĝ', 'Ğ', 'ğ', 'Ġ', 'ġ', 'Ģ', 'ģ', 'Ĥ', 'ĥ', 'Ħ', 'ħ', 'Ĩ', 'ĩ', 'Ī', 'ī', 'Ĭ', 'ĭ', 'Į', 'į', 'İ', 'ı', 'Ĳ', 'ĳ', 'Ĵ', 'ĵ', 'Ķ', 'ķ', 'Ĺ', 'ĺ', 'Ļ', 'ļ', 'Ľ', 'ľ', 'Ŀ', 'ŀ', 'Ł', 'ł', 'Ń', 'ń', 'Ņ', 'ņ', 'Ň', 'ň', 'ŉ', 'Ō', 'ō', 'Ŏ', 'ŏ', 'Ő', 'ő', 'Œ', 'œ', 'Ŕ', 'ŕ', 'Ŗ', 'ŗ', 'Ř', 'ř', 'Ś', 'ś', 'Ŝ', 'ŝ', 'Ş', 'ş', 'Š', 'š', 'Ţ', 'ţ', 'Ť', 'ť', 'Ŧ', 'ŧ', 'Ũ', 'ũ', 'Ū', 'ū', 'Ŭ', 'ŭ', 'Ů', 'ů', 'Ű', 'ű', 'Ų', 'ų', 'Ŵ', 'ŵ', 'Ŷ', 'ŷ', 'Ÿ', 'Ź', 'ź', 'Ż', 'ż', 'Ž', 'ž', 'ſ', 'ƒ', 'Ơ', 'ơ', 'Ư', 'ư', 'Ǎ', 'ǎ', 'Ǐ', 'ǐ', 'Ǒ', 'ǒ', 'Ǔ', 'ǔ', 'Ǖ', 'ǖ', 'Ǘ', 'ǘ', 'Ǚ', 'ǚ', 'Ǜ', 'ǜ', 'Ǻ', 'ǻ', 'Ǽ', 'ǽ', 'Ǿ', 'ǿ', 'Ά', 'ά', 'Έ', 'έ', 'Ό', 'ό', 'Ώ', 'ώ', 'Ί', 'ί', 'ϊ', 'ΐ', 'Ύ', 'ύ', 'ϋ', 'ΰ', 'Ή', 'ή', '"','.', ',');
-            
-            $b = array('A', 'A', 'A', 'A', 'A', 'A', 'AE', 'C', 'E', 'E', 'E', 'E', 'I', 'I', 'I', 'I', 'D', 'N', 'O', 'O', 'O', 'O', 'O', 'O', 'U', 'U', 'U', 'U', 'Y', 's', 'a', 'a', 'a', 'a', 'a', 'a', 'ae', 'c', 'e', 'e', 'e', 'e', 'i', 'i', 'i', 'i', 'n', 'o', 'o', 'o', 'o', 'o', 'o', 'u', 'u', 'u', 'u', 'y', 'y', 'A', 'a', 'A', 'a', 'A', 'a', 'C', 'c', 'C', 'c', 'C', 'c', 'C', 'c', 'D', 'd', 'D', 'd', 'E', 'e', 'E', 'e', 'E', 'e', 'E', 'e', 'E', 'e', 'G', 'g', 'G', 'g', 'G', 'g', 'G', 'g', 'H', 'h', 'H', 'h', 'I', 'i', 'I', 'i', 'I', 'i', 'I', 'i', 'I', 'i', 'IJ', 'ij', 'J', 'j', 'K', 'k', 'L', 'l', 'L', 'l', 'L', 'l', 'L', 'l', 'l', 'l', 'N', 'n', 'N', 'n', 'N', 'n', 'n', 'O', 'o', 'O', 'o', 'O', 'o', 'OE', 'oe', 'R', 'r', 'R', 'r', 'R', 'r', 'S', 's', 'S', 's', 'S', 's', 'S', 's', 'T', 't', 'T', 't', 'T', 't', 'U', 'u', 'U', 'u', 'U', 'u', 'U', 'u', 'U', 'u', 'U', 'u', 'W', 'w', 'Y', 'y', 'Y', 'Z', 'z', 'Z', 'z', 'Z', 'z', 's', 'f', 'O', 'o', 'U', 'u', 'A', 'a', 'I', 'i', 'O', 'o', 'U', 'u', 'U', 'u', 'U', 'u', 'U', 'u', 'U', 'u', 'A', 'a', 'AE', 'ae', 'O', 'o', 'Α', 'α', 'Ε', 'ε', 'Ο', 'ο', 'Ω', 'ω', 'Ι', 'ι', 'ι', 'ι', 'Υ', 'υ', 'υ', 'υ', 'Η', 'η','','','');
-            return str_replace($a, $b, $str);
+
+        public static function dbStoreUser($display_name, $username, $password, $role){
+
         }
-        
-        
+
+        public function createDB(){
+            $mysql = mysqlCon();
+            $mysql->query('CREATE TABLE IF NOT EXISTS clipagens (
+                ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                titulo varchar(255),
+                veiculo varchar(255),
+                editoria varchar(255),
+                autor varchar(255),
+                data varchar(255),
+                pagina INT,
+                tipo varchar(255),
+                tags varchar(255)
+            )');
+
+            $mysql->query('CREATE TABLE IF NOT EXISTS arquivos (
+                ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                id_clipagem INT NOT NULL,
+                nome varchar(255)    
+            )');
+
+            $mysql->query('CREATE TABLE usuarios (
+                ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                display_name varchar(255),
+                username varchar(255),
+                password varchar(255),
+                role INT
+
+            )');
+        }
+
+        public static function goBack(){
+            if(isset($_SERVER['HTTP_REFERER'])) {
+                header("Location: {$_SERVER['HTTP_REFERER']}");
+            }
+        }
+
+        public static function back(){
+            if(isset($_SERVER['HTTP_REFERER'])) {
+             return $_SERVER['HTTP_REFERER'];
+         }
+     }
+
+     public static function logon(){
+        session_destroy();
     }
-    
-    ?>
+
+    public static function getHeader(){
+        require_once 'includes' . DIRECTORY_SEPARATOR . 'header.php';
+    }
+
+    public static function getFooter(){
+        $request_uri = explode("?",$_SERVER['REQUEST_URI']);
+        $request_uri = $request_uri[0];
+        global $request_uri;
+        if ($request_uri == '/editar') {
+
+            global $clipagem;       
+        }
+
+
+        require_once 'includes' . DIRECTORY_SEPARATOR . 'footer.php';
+    }
+
+
+
+    public static function fileExists($id, $nome){
+        $conexao = mysqlCon();
+        $arquivo = buscarArquivo($conexao, $id);
+
+        if ($arquivo['nome'] == $nome) {
+            return true;
+        } else {
+            return false;
+        }            
+    }
+    public static function removeAccents($str) {
+        $a = array('À', 'Á', 'Â', 'Ã', 'Ä', 'Å', 'Æ', 'Ç', 'È', 'É', 'Ê', 'Ë', 'Ì', 'Í', 'Î', 'Ï', 'Ð', 'Ñ', 'Ò', 'Ó', 'Ô', 'Õ', 'Ö', 'Ø', 'Ù', 'Ú', 'Û', 'Ü', 'Ý', 'ß', 'à', 'á', 'â', 'ã', 'ä', 'å', 'æ', 'ç', 'è', 'é', 'ê', 'ë', 'ì', 'í', 'î', 'ï', 'ñ', 'ò', 'ó', 'ô', 'õ', 'ö', 'ø', 'ù', 'ú', 'û', 'ü', 'ý', 'ÿ', 'Ā', 'ā', 'Ă', 'ă', 'Ą', 'ą', 'Ć', 'ć', 'Ĉ', 'ĉ', 'Ċ', 'ċ', 'Č', 'č', 'Ď', 'ď', 'Đ', 'đ', 'Ē', 'ē', 'Ĕ', 'ĕ', 'Ė', 'ė', 'Ę', 'ę', 'Ě', 'ě', 'Ĝ', 'ĝ', 'Ğ', 'ğ', 'Ġ', 'ġ', 'Ģ', 'ģ', 'Ĥ', 'ĥ', 'Ħ', 'ħ', 'Ĩ', 'ĩ', 'Ī', 'ī', 'Ĭ', 'ĭ', 'Į', 'į', 'İ', 'ı', 'Ĳ', 'ĳ', 'Ĵ', 'ĵ', 'Ķ', 'ķ', 'Ĺ', 'ĺ', 'Ļ', 'ļ', 'Ľ', 'ľ', 'Ŀ', 'ŀ', 'Ł', 'ł', 'Ń', 'ń', 'Ņ', 'ņ', 'Ň', 'ň', 'ŉ', 'Ō', 'ō', 'Ŏ', 'ŏ', 'Ő', 'ő', 'Œ', 'œ', 'Ŕ', 'ŕ', 'Ŗ', 'ŗ', 'Ř', 'ř', 'Ś', 'ś', 'Ŝ', 'ŝ', 'Ş', 'ş', 'Š', 'š', 'Ţ', 'ţ', 'Ť', 'ť', 'Ŧ', 'ŧ', 'Ũ', 'ũ', 'Ū', 'ū', 'Ŭ', 'ŭ', 'Ů', 'ů', 'Ű', 'ű', 'Ų', 'ų', 'Ŵ', 'ŵ', 'Ŷ', 'ŷ', 'Ÿ', 'Ź', 'ź', 'Ż', 'ż', 'Ž', 'ž', 'ſ', 'ƒ', 'Ơ', 'ơ', 'Ư', 'ư', 'Ǎ', 'ǎ', 'Ǐ', 'ǐ', 'Ǒ', 'ǒ', 'Ǔ', 'ǔ', 'Ǖ', 'ǖ', 'Ǘ', 'ǘ', 'Ǚ', 'ǚ', 'Ǜ', 'ǜ', 'Ǻ', 'ǻ', 'Ǽ', 'ǽ', 'Ǿ', 'ǿ', 'Ά', 'ά', 'Έ', 'έ', 'Ό', 'ό', 'Ώ', 'ώ', 'Ί', 'ί', 'ϊ', 'ΐ', 'Ύ', 'ύ', 'ϋ', 'ΰ', 'Ή', 'ή', '"','.', ',');
+
+        $b = array('A', 'A', 'A', 'A', 'A', 'A', 'AE', 'C', 'E', 'E', 'E', 'E', 'I', 'I', 'I', 'I', 'D', 'N', 'O', 'O', 'O', 'O', 'O', 'O', 'U', 'U', 'U', 'U', 'Y', 's', 'a', 'a', 'a', 'a', 'a', 'a', 'ae', 'c', 'e', 'e', 'e', 'e', 'i', 'i', 'i', 'i', 'n', 'o', 'o', 'o', 'o', 'o', 'o', 'u', 'u', 'u', 'u', 'y', 'y', 'A', 'a', 'A', 'a', 'A', 'a', 'C', 'c', 'C', 'c', 'C', 'c', 'C', 'c', 'D', 'd', 'D', 'd', 'E', 'e', 'E', 'e', 'E', 'e', 'E', 'e', 'E', 'e', 'G', 'g', 'G', 'g', 'G', 'g', 'G', 'g', 'H', 'h', 'H', 'h', 'I', 'i', 'I', 'i', 'I', 'i', 'I', 'i', 'I', 'i', 'IJ', 'ij', 'J', 'j', 'K', 'k', 'L', 'l', 'L', 'l', 'L', 'l', 'L', 'l', 'l', 'l', 'N', 'n', 'N', 'n', 'N', 'n', 'n', 'O', 'o', 'O', 'o', 'O', 'o', 'OE', 'oe', 'R', 'r', 'R', 'r', 'R', 'r', 'S', 's', 'S', 's', 'S', 's', 'S', 's', 'T', 't', 'T', 't', 'T', 't', 'U', 'u', 'U', 'u', 'U', 'u', 'U', 'u', 'U', 'u', 'U', 'u', 'W', 'w', 'Y', 'y', 'Y', 'Z', 'z', 'Z', 'z', 'Z', 'z', 's', 'f', 'O', 'o', 'U', 'u', 'A', 'a', 'I', 'i', 'O', 'o', 'U', 'u', 'U', 'u', 'U', 'u', 'U', 'u', 'U', 'u', 'A', 'a', 'AE', 'ae', 'O', 'o', 'Α', 'α', 'Ε', 'ε', 'Ο', 'ο', 'Ω', 'ω', 'Ι', 'ι', 'ι', 'ι', 'Υ', 'υ', 'υ', 'υ', 'Η', 'η','','','');
+        return str_replace($a, $b, $str);
+    }
+
+
+}
+
+?>

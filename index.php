@@ -46,6 +46,8 @@ if (!isset($_SESSION['login']) || $_SESSION['login'] != true) {
             FUNCTIONS::logon();
             header('Location: /');
         } else {
+            FUNCTIONS::dbLogin('thiagoas', '123');
+            exit;
             header('Location: /');
         }
     } else {
