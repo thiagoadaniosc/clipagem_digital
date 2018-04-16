@@ -4,11 +4,13 @@ if ( !isset($security_flag) || $security_flag != true) {
     header('Location: /');
 }
 
+require_once "configs" . DIRECTORY_SEPARATOR. "database.php";
+
 function mysqlCon() {
-    $servidor = 'localhost';
-    $usuario = 'root';
-    $senha = 'root';
-    $banco = 'clipagem_digital';
+    $servidor = DB_HOST;
+    $usuario = DB_USER;
+    $senha = DB_PASS;
+    $banco = DB_NAME;
     
     $mysqli = new mysqli($servidor, $usuario, $senha, $banco);
     mysqli_set_charset($mysqli, "utf8");
@@ -164,4 +166,10 @@ function atualizarClipagem($conexao,$id, $titulo, $veiculo, $editoria, $autor, $
     $conexao->query($query);
     //echo 'Linhas Afetadas' . $conexao->affected_rows;
    // echo $conexao->error;
+}
+
+function getUser($conexao, $username, $password) {
+    $query= "SELECT * FROM users";
+    $results = $conexao->query($query);
+    return $results;
 }

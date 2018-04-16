@@ -82,7 +82,7 @@
                 data-msg-placeholder="Selecione {arquivos} para a matéria..." multiple>
         </div>
         <div class="form-group col-lg-12">
-            <button class="float-left btn btn-danger col-lg-5" style="height: 50px;" type="button"  onclick="window.location.href='/clipagens'">
+            <button class="float-left btn btn-danger col-lg-5" style="height: 50px;" type="button"  onclick="window.location.href='<?= FUNCTIONS::back();?>'">
                 <i class="fa fa-times" aria-hidden="true"></i> CANCELAR </button>
 
             <button class="float-right btn btn-primary col-lg-5" style="height: 50px;" type="submit">Editar

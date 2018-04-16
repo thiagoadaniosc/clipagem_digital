@@ -24,8 +24,9 @@ CREATE TABLE arquivos (
 
 CREATE TABLE usuarios (
 	ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    nome varchar(255),
-    login varchar(255),
-    senha varchar(255)
+    display_name varchar(255),
+    username varchar(255),
+    password varchar(255),
+    role INT
     
 );
