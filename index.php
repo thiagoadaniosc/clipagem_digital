@@ -8,7 +8,7 @@ $complete_request_uri = $_SERVER['REQUEST_URI'];
 $request_uri = $request_uri[0];
 $request_method = $_SERVER['REQUEST_METHOD'];
 $security_flag = true;
-$version = '1.1.4 Stable';
+$version = '1.1.5 Stable';
 $version_beta = '1.6.4 Beta';
 $version_alfa = '1.9.2 Alfa';
 
@@ -35,6 +35,7 @@ if (!isset($_SESSION['login']) || $_SESSION['login'] != true) {
         } elseif ($request_uri == '/clipagens') {
             if (isset($_GET['pesquisar']) && !empty($_GET['pesquisar'])) { 
                 $lista = FUNCTIONS::buscarClipagens();
+                FUNCTIONS::getView();
                 require_once 'lista.php';
             } else {
                 $lista = FUNCTIONS::listarClipagens();
@@ -85,9 +86,13 @@ if (!isset($_SESSION['login']) || $_SESSION['login'] != true) {
             FUNCTIONS::downloadPesquisa();
         } elseif ($request_uri == '/informacoes') {
             require_once 'informacoes.php';
-        } //elseif ($request_uri == '/teste') { 
-          //  FUNCTIONS::cadastrarClipagemTest();
-        //} 
+        } elseif ($request_uri == '/teste') { 
+            $display_name = 'thiagosc6';
+            $username = "thiagosc6";
+            $password = "123";
+            $role = 1;
+            FUNCTIONS::dbStoreUser($display_name, $username, $password, $role);
+        } 
         else {
             require_once 'menu.php';
         }

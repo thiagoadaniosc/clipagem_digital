@@ -1,6 +1,10 @@
 # Clipagem Digital
 
-Versão 1.0 do software de Clipagem Digital
+Versão 1.0 Beta do software de Clipagem Digital.
+
+Esta versão ainda está em desenvolvimento.
+
+A Versão 2.0 entrara em desenvolvimento em breve, com diversas funcionalidades.
 
 ## Getting Started
 

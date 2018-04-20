@@ -169,7 +169,19 @@ function atualizarClipagem($conexao,$id, $titulo, $veiculo, $editoria, $autor, $
 }
 
 function getUser($conexao, $username, $password) {
-    $query= "SELECT * FROM users";
+    $query= "SELECT * FROM usuarios";
     $results = $conexao->query($query);
     return $results;
+}
+
+function storeUser($conexao, $display_name, $username, $password, $role) {
+    $password = md5($password);
+    $query= "INSERT INTO usuarios (display_name, username, password, role)values ('{$display_name}', '{$username}', '{$password}', $role)";
+    $results = $conexao->query($query);
+    if ($results == false) {
+        return false;
+    } else {
+        return true;
+    }
+    
 }
