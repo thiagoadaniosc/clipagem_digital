@@ -10,6 +10,11 @@ body {
     background-size: cover;
 }
 
+.dropdown-menu-right {
+    right: 0;
+    left:auto;
+}
+
 .formBody {
     position: relative;
     top: 50px;

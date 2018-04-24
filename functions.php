@@ -1,5 +1,11 @@
 <?php
 class FUNCTIONS {
+
+    public static function dd($value){
+        echo  '<h1>'.$value . '<h1>';
+        exit;
+    }
+
     public static function cadastrarClipagemTest() { 
         $conexao = mysqlCon();
         
@@ -234,11 +240,17 @@ class FUNCTIONS {
         $_SESSION['login'] = true;
         return header('Location: /clipagens');
     }
-    
+
     public static function login(){
+        if (LDAP_LOGIN){
+            FUNCTIONS::adlogin($username, $password);
+        } else {
+            FUNCTIONS::dbLogin($username, $password);
+        }
+    }
+    
+    public static function adlogin($user, $pass){
         // $conexao = mysqlCon();
-        $user = $_POST['usuario'];
-        $pass = $_POST['senha'];
         /*
         $checkLogin = checkLogin($conexao, $user, $pass);
         if ($checkLogin != false) {
@@ -275,7 +287,7 @@ class FUNCTIONS {
 
                 $_SESSION['nome'] = $entries[0]['cn'][0];
 
-                $isComunicacao = preg_grep("/^.*Comunicação.*/", $entries[0]['memberof']);
+                $isComunicacao = preg_grep("/^.*{LDAP_GROUP_ADMIN}.*/", $entries[0]['memberof']);
 
 
                 if ($isComunicacao != null) {
@@ -328,9 +340,19 @@ class FUNCTIONS {
             $conexao = mysqlCon();
             $user = getUser($conexao, $username, $password);
             if ($user->num_rows == 1) {
-                var_dump($user->fetch_assoc());
+                while ($userData = $user->fetch_assoc()):
+                    $_SESSION['usuario'] = $userData['username'];
+                    $_SESSION['nome'] = $userData['display_name'];
+                    if ($userData['role'] == 1):
+                        $_SESSION['admin'] = true;
+                    else:
+                        $_SESSION['admin'] = false;
+                    endif;
+                    $_SESSION['login'] = true;
+                endwhile;
+                self::goBack();
             } else {
-                header('Location: /login');
+                header('Location: /login?login=false');
             }
 
         }
@@ -423,15 +445,6 @@ class FUNCTIONS {
         }            
     }
 
-    public static function viewExists(){
-
-    }
-
-    public static function getView($viewName){
-        if (viewExists($viewName)) {
-            require_once($viewName . '.php' );
-        }
-    }
 
     public static function removeAccents($str) {
         $a = array('À', 'Á', 'Â', 'Ã', 'Ä', 'Å', 'Æ', 'Ç', 'È', 'É', 'Ê', 'Ë', 'Ì', 'Í', 'Î', 'Ï', 'Ð', 'Ñ', 'Ò', 'Ó', 'Ô', 'Õ', 'Ö', 'Ø', 'Ù', 'Ú', 'Û', 'Ü', 'Ý', 'ß', 'à', 'á', 'â', 'ã', 'ä', 'å', 'æ', 'ç', 'è', 'é', 'ê', 'ë', 'ì', 'í', 'î', 'ï', 'ñ', 'ò', 'ó', 'ô', 'õ', 'ö', 'ø', 'ù', 'ú', 'û', 'ü', 'ý', 'ÿ', 'Ā', 'ā', 'Ă', 'ă', 'Ą', 'ą', 'Ć', 'ć', 'Ĉ', 'ĉ', 'Ċ', 'ċ', 'Č', 'č', 'Ď', 'ď', 'Đ', 'đ', 'Ē', 'ē', 'Ĕ', 'ĕ', 'Ė', 'ė', 'Ę', 'ę', 'Ě', 'ě', 'Ĝ', 'ĝ', 'Ğ', 'ğ', 'Ġ', 'ġ', 'Ģ', 'ģ', 'Ĥ', 'ĥ', 'Ħ', 'ħ', 'Ĩ', 'ĩ', 'Ī', 'ī', 'Ĭ', 'ĭ', 'Į', 'į', 'İ', 'ı', 'Ĳ', 'ĳ', 'Ĵ', 'ĵ', 'Ķ', 'ķ', 'Ĺ', 'ĺ', 'Ļ', 'ļ', 'Ľ', 'ľ', 'Ŀ', 'ŀ', 'Ł', 'ł', 'Ń', 'ń', 'Ņ', 'ņ', 'Ň', 'ň', 'ŉ', 'Ō', 'ō', 'Ŏ', 'ŏ', 'Ő', 'ő', 'Œ', 'œ', 'Ŕ', 'ŕ', 'Ŗ', 'ŗ', 'Ř', 'ř', 'Ś', 'ś', 'Ŝ', 'ŝ', 'Ş', 'ş', 'Š', 'š', 'Ţ', 'ţ', 'Ť', 'ť', 'Ŧ', 'ŧ', 'Ũ', 'ũ', 'Ū', 'ū', 'Ŭ', 'ŭ', 'Ů', 'ů', 'Ű', 'ű', 'Ų', 'ų', 'Ŵ', 'ŵ', 'Ŷ', 'ŷ', 'Ÿ', 'Ź', 'ź', 'Ż', 'ż', 'Ž', 'ž', 'ſ', 'ƒ', 'Ơ', 'ơ', 'Ư', 'ư', 'Ǎ', 'ǎ', 'Ǐ', 'ǐ', 'Ǒ', 'ǒ', 'Ǔ', 'ǔ', 'Ǖ', 'ǖ', 'Ǘ', 'ǘ', 'Ǚ', 'ǚ', 'Ǜ', 'ǜ', 'Ǻ', 'ǻ', 'Ǽ', 'ǽ', 'Ǿ', 'ǿ', 'Ά', 'ά', 'Έ', 'έ', 'Ό', 'ό', 'Ώ', 'ώ', 'Ί', 'ί', 'ϊ', 'ΐ', 'Ύ', 'ύ', 'ϋ', 'ΰ', 'Ή', 'ή', '"','.', ',');

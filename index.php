@@ -1,18 +1,10 @@
 <?php 
 ini_set('default_charset', 'UTF-8');
 session_start();
-//$base_url = $_SERVER['HTTP_HOST'];
-//$base_path = $_SERVER['DOCUMENT_ROOT'];
-$request_uri = explode("?",$_SERVER['REQUEST_URI']);
-$complete_request_uri = $_SERVER['REQUEST_URI'];
-$request_uri = $request_uri[0];
-$request_method = $_SERVER['REQUEST_METHOD'];
-$security_flag = true;
-$version = '1.1.5 Stable';
-$version_beta = '1.6.4 Beta';
-$version_alfa = '1.9.2 Alfa';
-
+require_once 'kernel.php';
+require_once 'configs/globalVariables.php';
 require_once 'includes' . DIRECTORY_SEPARATOR . 'db.php';
+require 'configs' . DIRECTORY_SEPARATOR . 'ad.php';
 require_once 'functions.php'; 
 
 
@@ -20,81 +12,98 @@ require_once 'functions.php';
 //var_dump($_SERVER);
 
 if (!isset($_SESSION['login']) || $_SESSION['login'] != true) {
-    if ($request_uri == '/logar') {
-        FUNCTIONS::login();
-    } elseif ($request_uri == '/visitante' && isset($_GET['username'])){
+    if (routePost('/logar')) {
+        FUNCTIONS::login($_POST['usuario'], $_POST['senha']);
+    } elseif (routeGet('/visitante') && isset($_GET['username'])){
         $username = empty($_GET['username']) ? 'visitante' : $_GET['username'];
         FUNCTIONS::guestLogin($username);
     } else {
-        require_once 'login.php';
+        getView('login');
     }
 } else {
-    if ($_SESSION['admin'] == false) {
-        if ($request_uri == '/') {
+    if (!isAdmin()) { // Usuário Comum
+        if (routeGet('/')) {
             header('Location: /clipagens');
-        } elseif ($request_uri == '/clipagens') {
+        } elseif (routeAny('/clipagens')) {
             if (isset($_GET['pesquisar']) && !empty($_GET['pesquisar'])) { 
                 $lista = FUNCTIONS::buscarClipagens();
-                FUNCTIONS::getView();
-                require_once 'lista.php';
+                $data = [
+                    "lista" => $lista
+                ];
+                getView('lista', $data);
             } else {
-                $lista = FUNCTIONS::listarClipagens();
-                require_once 'lista.php';
+                 $data = [
+                    "lista" => FUNCTIONS::listarClipagens()
+                ];
+                getView('lista', $data);
+
             }
-        } elseif($request_uri == '/pesquisa') {
+        } elseif(routeAny('/pesquisa')) {
             FUNCTIONS::downloadPesquisa();
-        } elseif($request_uri == '/logon') {
+        } elseif(routeAny('/logon')) {
             FUNCTIONS::logon();
-            header('Location: /');
+            redirect('/');
         } else {
-            FUNCTIONS::dbLogin('thiagoas', '123');
-            exit;
-            header('Location: /');
+            //FUNCTIONS::dbLogin('thiagoas', '123');
+            //exit;
+            redirect('/');
         }
     } else {
         
-        if ($request_uri == '/') {
+        if (routeGet('/')) {
             require_once 'menu.php';
-        } else if ($request_uri == '/login') {
+        } else if (routeGet('/login')) {
             require_once 'login.php';
-        } elseif ($request_uri == '/cadastro') {
+        } elseif (routeGet('/cadastro')) {
             require_once 'cadastro.php';
-        } elseif ($request_uri == '/clipagens') {
+        } elseif (routeAny('/clipagens')) {
             if (isset($_GET['pesquisar']) && !empty($_GET['pesquisar'])) { 
                 $lista = FUNCTIONS::buscarClipagens();
-                require_once 'lista.php';
+                $data = [
+                    "lista" => $lista
+                ];
+                getView('clipagens', $data);
             } else {
                 $lista = FUNCTIONS::listarClipagens();
-                require_once 'lista.php';
+                $data = [
+                    "lista" => $lista
+                ];
+                getView('lista', $data);
             }
-        } elseif ($request_uri == '/editar' && isset($_GET['id']) && $_GET['id'] != null && is_numeric($_GET['id'])) { 
+        } elseif (routeGet('/editar') && isset($_GET['id']) && $_GET['id'] != null && is_numeric($_GET['id'])) { 
             $clipagem = FUNCTIONS::buscarClipagem($_GET['id']);
-            require_once 'editar.php';
-        } elseif ($request_uri == '/editar' && $request_method == 'POST') {
+            $data = [
+                'clipagem' => $clipagem
+            ];
+            getView('editar', $data);
+        } elseif (routePost('/editar')) {
             FUNCTIONS::editarClipagem();
-        } elseif($request_uri == '/logon') {
+        } elseif(routeAny('/logon')) {
             FUNCTIONS::logon();
-            header('Location:/');
-        } elseif ($request_uri == '/cadastrar' && $request_method == 'POST') {
+            redirect('/');
+        } elseif (routePost('/cadastrar')) {
             FUNCTIONS::cadastrarClipagem();
-            header('Location: /');
-        } elseif ($request_uri == '/editar' && $request_method == 'POST') {
-            echo 'Editar Clipagem';
-        }  elseif ($request_uri == '/deletar') {
+            redirect('/');
+        } elseif (routeGet('/deletar')) {
             FUNCTIONS::deletarClipagem();
-        } elseif($request_uri == '/pesquisa') {
+        } elseif(routeGet('/pesquisa')) {
             FUNCTIONS::downloadPesquisa();
-        } elseif ($request_uri == '/informacoes') {
-            require_once 'informacoes.php';
+        } elseif (routeGet('/informacoes')) {
+            getView('informacoes');
         } elseif ($request_uri == '/teste') { 
-            $display_name = 'thiagosc6';
+            /*$display_name = 'thiagosc6';
             $username = "thiagosc6";
             $password = "123";
             $role = 1;
             FUNCTIONS::dbStoreUser($display_name, $username, $password, $role);
+            */
+            $data = [
+                'lista' =>  FUNCTIONS::listarClipagens()
+            ];
+            getView('lista', $data);
         } 
         else {
-            require_once 'menu.php';
+            getView('menu');
         }
         
     }

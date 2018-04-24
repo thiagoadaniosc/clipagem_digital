@@ -39,7 +39,7 @@
             <button type="button" class="btn btn-primary dropdown-toggle col-lg-12 rounded-0" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <?= $_SESSION['nome'] ?>
             </button>
-            <div class="dropdown-menu">
+            <div class="dropdown-menu dropdown-menu-right">
                 <a class="dropdown-item" href="/logon"><i class="fa fa-sign-out"></i> Sair</a>
             </div>
             </div>
