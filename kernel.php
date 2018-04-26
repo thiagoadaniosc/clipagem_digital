@@ -1,7 +1,7 @@
 <?php
 
 function viewExists($viewName){
-	return file_exists($viewName . '.php');
+	return file_exists('resources'. DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . $viewName . '.php');
 }
 
 function getView($viewName, $data = ""){
@@ -12,9 +12,9 @@ function getView($viewName, $data = ""){
 		}
 	}
 	if (viewExists($viewName)) {
-		require_once($viewName . '.php' );
+		require_once('resources'. DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . $viewName . '.php' );
 	} else {
-		dd('O arquivo $viewName.php não existe');
+		FUNCTIONS::dd("A View '{$viewName}' não existe");
 	}
 }
 
@@ -59,6 +59,7 @@ function routeAny($route){
 	}
 }
 
-function redirect($route){
+function redirect($route = '/'){
 	header("Location: {$route}");
+	exit;
 }

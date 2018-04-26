@@ -169,14 +169,27 @@ function atualizarClipagem($conexao,$id, $titulo, $veiculo, $editoria, $autor, $
 }
 
 function getUser($conexao, $username, $password) {
+    $password = md5($password);
+    $query= "SELECT * FROM usuarios WHERE username = '{$username}' and password = '{$password}'";
+    $results = $conexao->query($query);
+    return $results;
+}
+
+function getUsers($conexao) {
     $query= "SELECT * FROM usuarios";
     $results = $conexao->query($query);
     return $results;
 }
 
-function storeUser($conexao, $display_name, $username, $password, $role) {
+function getUserID($conexao, $id) {
+    $query= "SELECT * FROM usuarios WHERE id = {$id}";
+    $results = $conexao->query($query);
+    return $results;
+}
+
+function storeUser($conexao, $display_name, $username,$email, $password, $role) {
     $password = md5($password);
-    $query= "INSERT INTO usuarios (display_name, username, password, role)values ('{$display_name}', '{$username}', '{$password}', $role)";
+    $query= "INSERT INTO usuarios (display_name, username, email, password, role)values ('{$display_name}', '{$username}','{$email}', '{$password}', $role)";
     $results = $conexao->query($query);
     if ($results == false) {
         return false;
@@ -184,4 +197,15 @@ function storeUser($conexao, $display_name, $username, $password, $role) {
         return true;
     }
     
+}
+
+function updateUser($conexao, $id, $display_name, $username, $email, $password,$status, $role){
+    if ($password == false){   
+        $query_no_pass = "UPDATE usuarios u SET u.display_name = '{$display_name}', u.username = '{$username}', u.email = '{$email}', u.status = '{$status}', u.role = '{$role}' WHERE u.id = {$id}";
+        $conexao->query($query_no_pass);
+    } else {
+        $password = md5($password);
+        $query_with_pass = "UPDATE usuarios u SET u.display_name = '{$display_name}', u.username = '{$username}', u.email = '{$email}', u.status = '{$status}', u.role = '{$role}', u.password = '{$password}' WHERE u.id = {$id}";
+        $conexao->query($query_with_pass);
+    }
 }
