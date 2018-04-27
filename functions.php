@@ -327,7 +327,7 @@ public static function dbUpdateUser($id, $display_name, $username, $email, $pass
 
 public static function getStatus($status):string {
     if ($status == 1) {
-        return 'Habilitado';
+        return 'Ativado';
     } else {
         return 'Desativado';
     }
@@ -363,6 +363,11 @@ public function createDB(){
         role INT DEFAULT 0
 
     )');
+
+    $mysql->query("INSERT INTO usuarios values (1,'Administrador', 'admin', '-','21232f297a57a5a743894a0e4a801fc3', 1,1)");
+    $mysql->query("INSERT INTO usuarios values (2,'Visitante', 'user ', '-','ee11cbb19052e40b07aac0ca060c23ee', 1,0)");
+
+
 }
 
 public static function goBack(){
