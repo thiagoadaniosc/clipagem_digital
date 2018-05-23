@@ -1,17 +1,14 @@
 # Clipagem Digital
 
-Versão 1.0 Beta do software de Clipagem Digital.
+Versão 1.2 do software de Clipagem Digital.
 
-Esta versão ainda está em desenvolvimento.
-
-A Versão 2.0 entrara em desenvolvimento em breve, com diversas funcionalidades.
+Esta versão ainda está em constante desenvolvimento.
 
 ## Getting Started
 
 Baixe ou clone este projeto em seu DOCUMENT ROOT, mude o grupo e o usuário de acordo com o seu servidor apache e altere as permições dos arquivos para 775.
 
-
-
+Na pasta de configurações edite os arquivos database.php e ad.php de acordo com seu uso.
 
 ### Prerequisites
 
@@ -21,10 +18,10 @@ PHP 5.6 >=
 
 Edite as configurações do banco de dados no arquivo /clipagem_digital/configs/database.php.
 
-No diretório do projeto execute o seguinte comando para criar as tabelas da base de dados:
+No diretório principal do projeto execute o seguinte comando para criar as tabelas da base de dados:
 
 ```
-php createdb.php
+php install.php
 ```
 
 <!--

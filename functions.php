@@ -38,8 +38,9 @@ class FUNCTIONS {
         $pagina = $_POST['pagina'];
         $tipo = $_POST['tipo'];
         $tags = $_POST['tags'];
+        $visible = $_POST['visible'];
         
-        $conexao = cadastro_clipagem($conexao, $titulo, $veiculo, $editoria, $autor, $data, $pagina, $tipo, $tags);
+        $conexao = cadastro_clipagem($conexao, $titulo, $veiculo, $editoria, $autor, $data, $pagina, $tipo, $tags, $visible);
         $id_clipagem = $conexao->insert_id;
         $date = new DateTime($_POST['data']);
         $data = $date->format('d-m-Y');
@@ -79,10 +80,11 @@ class FUNCTIONS {
         $pagina = $_POST['pagina'];
         $tipo = $_POST['tipo'];
         $tags = $_POST['tags'];
+        $visible = $_POST['visible'];
         
         
         
-        atualizarClipagem($conexao,$id, $titulo, $veiculo, $editoria, $autor, $data, $pagina, $tipo, $tags);
+        atualizarClipagem($conexao,$id, $titulo, $veiculo, $editoria, $autor, $data, $pagina, $tipo, $tags, $visible);
         
         if (empty($_FILES['file']['name'][0])== false) {
 
@@ -210,6 +212,9 @@ class FUNCTIONS {
 }
 
 public static function login($username, $password){
+    if (empty($username) || empty($password)) {
+        redirect('/');
+    }
     if (LDAP_LOGIN){
         FUNCTIONS::adlogin($username, $password);
     } else {
@@ -333,7 +338,7 @@ public static function getStatus($status):string {
     }
 }
 
-public function createDB(){
+public static function createDB(){
     $mysql = mysqlCon();
     $mysql->query('CREATE TABLE IF NOT EXISTS clipagens (
         ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -344,7 +349,8 @@ public function createDB(){
         data varchar(255),
         pagina INT,
         tipo varchar(255),
-        tags varchar(255)
+        tags varchar(255),
+        visible boolean DEFAULT true
     )');
 
     $mysql->query('CREATE TABLE IF NOT EXISTS arquivos (
@@ -369,6 +375,13 @@ public function createDB(){
 
 
 }
+
+public static function createDir($dirname) {
+    if (!is_dir(dirname(__FILE__) . DIRECTORY_SEPARATOR. $dirname )) {
+    mkdir( dirname(__FILE__) . DIRECTORY_SEPARATOR. $dirname, 0777, true );
+    }
+}
+
 
 public static function goBack(){
     if(isset($_SERVER['HTTP_REFERER'])) {
@@ -415,6 +428,31 @@ public static function fileExists($id, $nome){
     } else {
         return false;
     }            
+}
+
+public static function jsonClipagens($inicio, $fim){
+    $conexao = mysqlCon();
+    $clipagens = listar($conexao, $inicio, $fim);
+    $clipagensArray = array();
+    while($clipagem = $clipagens->fetch_assoc()) {
+        
+        array_push($clipagensArray, $clipagem);
+    } 
+    $query_result = getQuery($conexao,$query = "SELECT COUNT(*) FROM clipagens;")->fetch_assoc()['COUNT(*)'];
+    $paginas_total = ceil($query_result / $fim);
+    $dados = [
+        'Inicio' => $inicio,
+        'numItens' => $fim,
+        'totalPaginas' => $paginas_total
+    ];
+
+
+    array_push($clipagensArray, $dados);
+
+    echo json_encode($clipagensArray);
+ 
+
+
 }
 
 

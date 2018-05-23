@@ -50,6 +50,12 @@
         <div class="form-group col-lg-12">
             <input class="form-control" type="text" name="tags" data-role="tagsinput" id="tagInput" placeholder="Tags" required>
         </div>
+
+        <div class="form-group col-lg-12">
+            <input class="form-control float-left" value="1" type="checkbox" name="visible" style="height: 25px !important; width: 30px !important" checked>
+            <label for="visible" class="ml-2"><strong>Público</strong> (Visibilidade)</label>
+        </div>
+
         <div class="form-group col-lg-12">
             <input id="file" name="file[]" type="file" style="height: 50px;" class="file" data-show-upload="false" data-show-caption="true"
                 data-msg-placeholder="Selecione {arquivos} para a matéria..." multiple required>

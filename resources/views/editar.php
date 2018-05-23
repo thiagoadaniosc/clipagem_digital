@@ -77,6 +77,17 @@
         <div class="form-group col-lg-12">
             <input class="form-control" type="text" value="<?=$clipagem['tags']?>" name="tags" data-role="tagsinput" id="tagInput" placeholder="Tags" required>
         </div>
+        
+
+        <div class="form-group col-lg-12">
+            <?php if($clipagem['visible']) : ?>
+            <input class="form-control float-left" type="checkbox" value="1" name="visible" style="height: 25px !important; width: 30px !important" checked>
+            <?php else: ?>
+            <input class="form-control float-left" type="checkbox" value="1" name="visible" style="height: 25px !important; width: 30px !important">
+            <?php endif; ?>
+            <label for="visible" class="ml-2"><strong>Público</strong> (Visibilidade)</label>
+        </div>
+
         <div class="form-group col-lg-12">
             <input id="file" name="file[]" type="file" style="height: 50px;" class="file" data-show-upload="false" data-show-caption="true"
                 data-msg-placeholder="Selecione {arquivos} para a matéria..." multiple>

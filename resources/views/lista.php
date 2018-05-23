@@ -142,10 +142,13 @@
             <th scrope="col">Veículo</th>
             <th scrope="col">Editoria</th>
             <th scrope="col">Autor</th>
-            <th scrope="col">Data de publicação</th>
+            <th scrope="col" class=" text-center m-auto d-xl-table-cell d-lg-table-cell">Data<small><br>(Publicação)</small></th>
             <th scrope="col" align="center">Página</th>
-            <th scrope="col" class="d-xl-table-cell d-lg-table-cell d-md-none d-sm-none">Tipo (Capa ou Interno)</th>
+            <th scrope="col" width="15%" class="d-xl-table-cell d-lg-table-cell d-md-none d-sm-none text-center">Tipo <small><br>(Capa ou Conteúdo interno)</small></th>
             <th scrope="col" class="d-xl-table-cell d-lg-table-cell d-md-none d-sm-none">Tags</th>
+            <?php if(isAdmin()): ?>
+            <th scrope="col" class="d-xl-table-cell d-lg-table-cell d-md-none d-sm-none text-center">Visibilidade</th>
+            <?php endif; ?>
             <th scrope="col" class="text-center" align="center" width="100px">Opções</th>
         </thead>
         <tbody>
@@ -155,6 +158,10 @@
                 unset($_SESSION['arquivos']);
             }
             while($dados = $lista->fetch_assoc()): ?>
+
+            <?php if(!isAdmin() && $dados['visible'] == false) {
+                continue;
+            } ?>
             <?php if ($dados['tipo'] == 'capa') {
                 $tipo = 'Capa';
             } else {
@@ -171,8 +178,15 @@
                 <td><?=$dados['autor']?></td>
                 <td><?=$dados['data']?></td>
                 <td><?=$dados['pagina']?></td>
-                <td class="d-xl-table-cell d-lg-table-cell d-md-none d-sm-none"><?=$tipo?></td>
+                <td class="d-xl-table-cell d-lg-table-cell d-md-none d-sm-none text-center"><?=$tipo?></td>
                 <td class="d-xl-table-cell d-lg-table-cell d-md-none d-sm-none"><?=$dados['tags']?></td>
+                <?php if(isAdmin()): ?>
+                    <?php $text_visible = $dados['visible'] ? 'badge badge-success' : 'badge badge-danger' ?>
+                <td class="d-xl-table-cell d-lg-table-cell d-md-none d-sm-none m-auto text-center">
+                    <span class="<?=$text_visible?>"><?php echo $visibilidade = $dados['visible'] ? 'Público' : 'Privado';?></span>
+                </td>
+                <?php endif; ?>
+
                 <td align="center">
                     <?php if ($_SESSION['admin'] == true):?> 
                         <a class="badge badge-primary" href="uploads/<?=$dados['nome']?>" style="font-size: 15px" target="_blank"><i class="fa fa-eye"></i></a>

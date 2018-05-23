@@ -1,16 +1,16 @@
 <?php FUNCTIONS::getHeader(); ?>
 
-<div class="row col-lg-8 col-xl-5 col-md-8 justify-content-center menuBody">
+<div class="row col-lg-8 col-xl-6 col-md-8 justify-content-center menuBody">
 	<h2 class="col-lg-12 text-center">Menu Principal</h2>
 	
-	<div class="row p-2">
+	<div class="row p-2 col-lg-12">
 		
 		<div class="col-lg-6">
-			<a href="/clipagens" class="btn btn-primary col-lg-12 float-right" style="margin-top: 20px; padding: 30px; border-radius: 0px ; font-size: 25px"> <i class="fa fa-paperclip"></i> Clipagens</a>
+			<a href="/clipagens" class="btn btn-primary col-lg-12 float-right" style="margin-top: 20px; padding: 30px; border-radius: 0px ; font-size: 1.5em"> <i class="fa fa-paperclip"></i> Clipagens</a>
 		</div>
 
 		<div class="col-lg-6">
-			<a href="/cadastro" class="btn btn-primary col-lg-12" style="margin-top: 20px; padding: 30px; border-radius: 0px; font-size: 25px">Nova Clipagem <i class="fa fa-plus-square"></i>
+			<a href="/cadastro" class="btn btn-primary col-lg-12" style="margin-top: 20px; padding: 30px; border-radius: 0px; font-size: 1.5em">Nova Clipagem <i class="fa fa-plus-square"></i>
 			</a>	
 		</div>
 
