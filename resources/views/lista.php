@@ -134,22 +134,22 @@
     </p>
 <?php endif; ?>
 <div class="table-responsive">
-    <table class="table table-bordered table-hover table-sm col-lg-12">
+    <table class="table table-bordered table-hover table-sm col-lg-12" style="font-size: 1vw !important">
 
         <thead class="thead-light">
             <th scrope="col">#</th>
-            <th scrope="col">Título</th>
-            <th scrope="col">Veículo</th>
-            <th scrope="col">Editoria</th>
-            <th scrope="col">Autor</th>
+            <th scrope="col" style="min-width: 10vw">Título</th>
+            <th scrope="col" style="min-width: 8vw; max-width: 8px">Veículo</th>
+            <th scrope="col" style="min-width: 5vw;  max-width: 5px">Editoria</th>
+            <th scrope="col" style="min-width: 5vw; max-width: 5px">Autor</th>
             <th scrope="col" class=" text-center m-auto d-xl-table-cell d-lg-table-cell">Data<small><br>(Publicação)</small></th>
-            <th scrope="col" align="center">Página</th>
-            <th scrope="col" width="15%" class="d-xl-table-cell d-lg-table-cell d-md-none d-sm-none text-center">Tipo <small><br>(Capa ou Conteúdo interno)</small></th>
-            <th scrope="col" class="d-xl-table-cell d-lg-table-cell d-md-none d-sm-none">Tags</th>
+            <th scrope="col" style="min-width: 2vw" align="center">Página</th>
+            <th scrope="col" style="min-width: 8vw;  max-width: 10px" class="d-xl-table-cell d-lg-table-cell d-md-none d-sm-none text-center">Tipo <small><br>(Capa ou Conteúdo interno)</small></th>
+            <th scrope="col" style="min-width: 15vw;  max-width: 15vw" class="d-xl-table-cell d-lg-table-cell d-md-none d-sm-none">Tags</th>
             <?php if(isAdmin()): ?>
             <th scrope="col" class="d-xl-table-cell d-lg-table-cell d-md-none d-sm-none text-center">Visibilidade</th>
             <?php endif; ?>
-            <th scrope="col" class="text-center" align="center" width="100px">Opções</th>
+            <th scrope="col" class="text-center" align="center" style="min-width: 8vw">Opções</th>
         </thead>
         <tbody>
             <?php 
@@ -179,19 +179,26 @@
                 <td><?=$dados['data']?></td>
                 <td><?=$dados['pagina']?></td>
                 <td class="d-xl-table-cell d-lg-table-cell d-md-none d-sm-none text-center"><?=$tipo?></td>
-                <td class="d-xl-table-cell d-lg-table-cell d-md-none d-sm-none"><?=$dados['tags']?></td>
+                <td class="d-xl-table-cell d-lg-table-cell d-md-none d-sm-none overflow-x">                
+                        <?php $tags_array = explode(',', $dados['tags']);
+                            foreach ($tags_array as $tags) {
+                                echo '<span class="badge badge-primary mr-2">' .$tags . '</span>';
+                            }
+                        ?> 
+
+                </td>
                 <?php if(isAdmin()): ?>
                     <?php $text_visible = $dados['visible'] ? 'badge badge-success' : 'badge badge-danger' ?>
-                <td class="d-xl-table-cell d-lg-table-cell d-md-none d-sm-none m-auto text-center">
+                <td width="10px" class="d-xl-table-cell d-lg-table-cell d-md-none d-sm-none m-auto text-center">
                     <span class="<?=$text_visible?>"><?php echo $visibilidade = $dados['visible'] ? 'Público' : 'Privado';?></span>
                 </td>
                 <?php endif; ?>
 
                 <td align="center">
                     <?php if ($_SESSION['admin'] == true):?> 
-                        <a class="badge badge-primary" href="uploads/<?=$dados['nome']?>" style="font-size: 15px" target="_blank"><i class="fa fa-eye"></i></a>
-                        <a class="badge badge-secondary bg-dark" style="font-size: 15px" href="/editar?id=<?=$dados['id_clipagem']?>"><i class="fa fa-edit"></i></a>
-                        <a class="badge badge-danger" style="font-size: 15px" onclick="return confirm('Tem certeza que deseja remover este item ? ')" href="/deletar?id=<?=$dados['id_clipagem']?>"><i class="fa fa-trash-o"></i></a>
+                        <a class="badge badge-primary" href="uploads/<?=$dados['nome']?>" target="_blank"><i class="fa fa-eye"></i></a>
+                        <a class="badge badge-secondary bg-dark" href="/editar?id=<?=$dados['id_clipagem']?>"><i class="fa fa-edit"></i></a>
+                        <a class="badge badge-danger" onclick="return confirm('Tem certeza que deseja remover este item ? ')" href="/deletar?id=<?=$dados['id_clipagem']?>"><i class="fa fa-trash-o"></i></a>
                     <?php else:  ?>
                         <a class="badge badge-primary" href="uploads/<?=$dados['nome']?>" target="_blank"> Visualizar <i class="fa fa-eye"></i></a>
                     <?php endif;?>
