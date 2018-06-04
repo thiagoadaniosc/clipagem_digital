@@ -141,7 +141,7 @@
             <th scrope="col" style="min-width: 10vw">Título</th>
             <th scrope="col" style="min-width: 8vw; max-width: 8px">Veículo</th>
             <th scrope="col" style="min-width: 5vw;  max-width: 5px">Editoria</th>
-            <th scrope="col" style="min-width: 5vw; max-width: 5px">Autor</th>
+            <th scrope="col" style="min-width: 10vw; max-width: 10px">Autor</th>
             <th scrope="col" class=" text-center m-auto d-xl-table-cell d-lg-table-cell">Data<small><br>(Publicação)</small></th>
             <th scrope="col" style="min-width: 2vw" align="center">Página</th>
             <th scrope="col" style="min-width: 8vw;  max-width: 10px" class="d-xl-table-cell d-lg-table-cell d-md-none d-sm-none text-center">Tipo <small><br>(Capa ou Conteúdo interno)</small></th>
@@ -175,7 +175,7 @@
                 <td><?=$dados['titulo']?></td>
                 <td><?=$dados['veiculo']?></td>
                 <td><?=$dados['editoria']?></td>
-                <td><?=$dados['autor']?></td>
+                <td><p style="word-wrap: break-word; width: 10vw"><?=$dados['autor']?></p></td>
                 <td><?=$dados['data']?></td>
                 <td><?=$dados['pagina']?></td>
                 <td class="d-xl-table-cell d-lg-table-cell d-md-none d-sm-none text-center"><?=$tipo?></td>
