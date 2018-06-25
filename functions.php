@@ -46,7 +46,6 @@ class FUNCTIONS {
         $data = $date->format('d-m-Y');
         // FUNCTIONS::dd($id_clipagem);
         $fileName = $data . '-' . $id_clipagem;
-        
         FUNCTIONS::uploadArquivos($conexao, $id_clipagem, $fileName);
     }
     
@@ -58,7 +57,8 @@ class FUNCTIONS {
             foreach ($_FILES['file']['tmp_name'] as $tempFile){
                 $pdf->addPDF($tempFile, 'all');        
             }
-            $pdf->merge('file', 'uploads'. DIRECTORY_SEPARATOR . $fileName . 'pdf', 'P');
+            $fileName = $fileName . '.pdf';
+            $pdf->merge('file', 'uploads'. DIRECTORY_SEPARATOR . $fileName, 'P');
 
         } elseif($_POST['tipo_formato'] == 'video'){
             $video = $_FILES['file'];
