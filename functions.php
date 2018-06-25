@@ -30,13 +30,13 @@ class FUNCTIONS {
         
         $titulo = $_POST['titulo'];
         $veiculo = $_POST['veiculo'];
-        $editoria = $_POST['editoria'];
+        $editoria = isset($_POST['editoria']) ? $_POST['editoria'] : ' ';
         $autor = $_POST['autor'];
         $data = $_POST['data'];
         $date = new DateTime($data);
         $data = $date->format('d/m/Y');
-        $pagina = $_POST['pagina'];
-        $tipo = $_POST['tipo'];
+        $pagina = isset($_POST['pagina']) ? $_POST['pagina'] : 0;
+        $tipo = isset($_POST['tipo']) ? $_POST['tipo'] : $_POST['tipo_formato'];
         $tags = $_POST['tags'];
         $visible = $_POST['visible'];
         
@@ -44,23 +44,46 @@ class FUNCTIONS {
         $id_clipagem = $conexao->insert_id;
         $date = new DateTime($_POST['data']);
         $data = $date->format('d-m-Y');
-        
-        $fileName = $data . '-' . $id_clipagem . '.pdf';
+        // FUNCTIONS::dd($id_clipagem);
+        $fileName = $data . '-' . $id_clipagem;
         
         FUNCTIONS::uploadArquivos($conexao, $id_clipagem, $fileName);
     }
     
     public static function uploadArquivos($conexao, $id_clipagem, $fileName){
-        require_once 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
-        $pdf = new \Clegginabox\PDFMerger\PDFMerger;
+        if ($_POST['tipo_formato'] == 'pdf') {
+            require_once 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
+            $pdf = new \Clegginabox\PDFMerger\PDFMerger;
 
-        foreach ($_FILES['file']['tmp_name'] as $tempFile){
-            $pdf->addPDF($tempFile, 'all');        
+            foreach ($_FILES['file']['tmp_name'] as $tempFile){
+                $pdf->addPDF($tempFile, 'all');        
+            }
+            $pdf->merge('file', 'uploads'. DIRECTORY_SEPARATOR . $fileName . 'pdf', 'P');
+
+        } elseif($_POST['tipo_formato'] == 'video'){
+            $video = $_FILES['file'];
+            $tmp_name = $_FILES['file']['tmp_name'];
+
+            // var_dump($tmp_name);
+            $extension = pathinfo($video['name'], PATHINFO_EXTENSION);
+            $fileName = $fileName . '.' . $extension;
+            move_uploaded_file($tmp_name, dirname( __FILE__ ) . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR .  $fileName);  
+            // echo  dirname( __FILE__ ) . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR .  $fileName;
+        } elseif($_POST['tipo_formato'] == 'audio'){
+            $audio = $_FILES['file'];
+            $tmp_name = $_FILES['file']['tmp_name'];
+
+            // var_dump($tmp_name);
+            $extension = pathinfo($audio['name'], PATHINFO_EXTENSION);
+            $fileName = $fileName . '.' . $extension;
+            move_uploaded_file($tmp_name, dirname( __FILE__ ) . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR .  $fileName);  
+            // echo  dirname( __FILE__ ) . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR .  $fileName;
+        } elseif($_POST['tipo_formato'] == 'link'){
+            $fileName = $_POST['link'];
         }
-        
-        $pdf->merge('file', 'uploads'. DIRECTORY_SEPARATOR . $fileName, 'P');
-        
-        cadastro_arquivo($conexao, $id_clipagem, $fileName);
+
+        cadastro_arquivo($conexao, $id_clipagem, $fileName, $_POST['tipo']);
+
         
     }
     
@@ -68,44 +91,82 @@ class FUNCTIONS {
         require_once 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
         $pdf = new \Clegginabox\PDFMerger\PDFMerger;
         $conexao = mysqlCon();
-        
-        $titulo = $_POST['titulo'];
         $id = $_POST['id'];
+        $titulo = $_POST['titulo'];
         $veiculo = $_POST['veiculo'];
-        $editoria = $_POST['editoria'];
+        $editoria = isset($_POST['editoria']) ? $_POST['editoria'] : ' ';
         $autor = $_POST['autor'];
         $data = $_POST['data'];
         $date = new DateTime($data);
         $data = $date->format('d/m/Y');
-        $pagina = $_POST['pagina'];
-        $tipo = $_POST['tipo'];
+        $pagina = isset($_POST['pagina']) ? $_POST['pagina'] : 0;
+        $tipo = isset($_POST['tipo']) ? $_POST['tipo'] : $_POST['tipo_formato'];
         $tags = $_POST['tags'];
         $visible = $_POST['visible'];
+        $tipo_formato = $_POST['tipo_formato'];
         
         
         
         atualizarClipagem($conexao,$id, $titulo, $veiculo, $editoria, $autor, $data, $pagina, $tipo, $tags, $visible);
-        
-        if (empty($_FILES['file']['name'][0])== false) {
+        if ($tipo_formato == 'arquivo') {
+            if (empty($_FILES['file']['name'][0]) == false) {
 
+                foreach ($_FILES['file']['tmp_name'] as $tempFile){
+                    $pdf->addPDF($tempFile, 'all');        
+                    echo $tempFile;
+                }
+                
+                $date = new DateTime($_POST['data']);
+                
+                $data = $date->format('d-m-Y');
 
-
-            foreach ($_FILES['file']['tmp_name'] as $tempFile){
-                $pdf->addPDF($tempFile, 'all');        
-                echo $tempFile;
+                $fileName = $data . '-' . $id . '.pdf';
+                
+                $pdf->merge('file', 'uploads'. DIRECTORY_SEPARATOR . $fileName, 'P');
+                
+                $arquivo =  buscarArquivo($conexao, $id);
+                
+                atualizarArquivo($conexao, $arquivo['ID'], $fileName);
             }
-            
-            $date = new DateTime($_POST['data']);
-            
-            $data = $date->format('d-m-Y');
+        } elseif ($tipo_formato == 'audio'){
+            if (!empty($_FILES['file']['name'])){
 
-            $fileName = $data . '-' . $id . '.pdf';
-            
-            $pdf->merge('file', 'uploads'. DIRECTORY_SEPARATOR . $fileName, 'P');
-            
+                 $date = new DateTime($_POST['data']);
+                $data = $date->format('d-m-Y');
+                $fileName = $data . '-' . $id;
+                $audio = $_FILES['file'];
+                $tmp_name = $_FILES['file']['tmp_name'];
+                $extension = pathinfo($audio['name'], PATHINFO_EXTENSION);
+
+                $fileName = $fileName . '.' . $extension;
+                move_uploaded_file($tmp_name, dirname( __FILE__ ) . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR .  $fileName);                
+                
+                $arquivo =  buscarArquivo($conexao, $id);
+
+                atualizarArquivo($conexao, $arquivo['ID'], $fileName);
+            }
+
+        } elseif ($tipo_formato == 'video'){
+            if (!empty($_FILES['file']['name'])){
+                
+                $date = new DateTime($_POST['data']);
+                $data = $date->format('d-m-Y');
+                $fileName = $data . '-' . $id;
+                $video = $_FILES['file'];
+                $tmp_name = $_FILES['file']['tmp_name'];
+                $extension = pathinfo($video['name'], PATHINFO_EXTENSION);
+
+                $fileName = $fileName . '.' . $extension;
+                move_uploaded_file($tmp_name, dirname( __FILE__ ) . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR .  $fileName);                
+                
+                $arquivo =  buscarArquivo($conexao, $id);
+
+                atualizarArquivo($conexao, $arquivo['ID'], $fileName);
+            }
+        } elseif ($tipo_formato == 'link'){
+            $fileName = $_POST['link'];
             $arquivo =  buscarArquivo($conexao, $id);
-            
-            atualizarArquivo($conexao, $arquivo['ID'], $fileName);
+            atualizarArquivo($conexao, $arquivo['ID'], $fileName);        
         }
         
         redirect('/clipagens');
@@ -188,24 +249,33 @@ class FUNCTIONS {
     public static function downloadPesquisa(){
         require_once 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
         $pdf = new \Clegginabox\PDFMerger\PDFMerger;
+        $i = 0;
 
         if (isset($_SESSION['arquivos'])) {
             $fileName = $_SESSION['usuario']. '_' . 'pesquisa.pdf';
             foreach($_SESSION['arquivos'] as $arquivo){
-                if(file_exists('uploads/' . $arquivo)) {
-                    $pdf->addPDF('uploads'. DIRECTORY_SEPARATOR . $arquivo, 'all');
+                $extension = pathinfo($arquivo, PATHINFO_EXTENSION);
+                if ($extension == 'pdf') {
+                    if(file_exists('uploads/' . $arquivo)) {
+                        $pdf->addPDF('uploads'. DIRECTORY_SEPARATOR . $arquivo, 'all');
+                        $i++;
+                    }
                 }
             }
-            $pdf->merge('file', 'pesquisas'. DIRECTORY_SEPARATOR . $fileName);
-            redirect('/pesquisas' .DIRECTORY_SEPARATOR. $fileName);
+            if ($i != 0) {
+                $pdf->merge('file', 'pesquisas'. DIRECTORY_SEPARATOR . $fileName);
+                redirect('/pesquisas' .DIRECTORY_SEPARATOR. $fileName);
+            } else {
+                redirect('/clipagens');
+            }
 
         } else {
          redirect('/clipagens');   
      }
  }
- public static function guestLogin($username){
+ public static function guestLogin($username, $name){
     $_SESSION['usuario'] = $username;
-    $_SESSION['nome'] = $username;
+    $_SESSION['nome'] = $name;
     $_SESSION['admin'] = false;
     $_SESSION['login'] = true;
     return redirect('/clipagens'); 
@@ -249,10 +319,10 @@ public static function adlogin($user, $pass){
 
             $_SESSION['nome'] = $entries[0]['cn'][0];
 
-            $isComunicacao = preg_grep("/^.*".LDAP_GROUP_ADMIN.".*/", $entries[0]['memberof']);
+            $isGroupAdmin = preg_grep("/^.*".LDAP_GROUP_ADMIN.".*/", $entries[0]['memberof']);
 
 
-            if ($isComunicacao != null) {
+            if ($isGroupAdmin != null) {
                 $_SESSION['admin'] = true;
                 //echo 'É Comunicação';
             } else {

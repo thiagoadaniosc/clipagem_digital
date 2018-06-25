@@ -31,8 +31,8 @@ function cadastro_clipagem($conexao, $titulo, $veiculo, $editoria, $autor, $data
     return $conexao;
 }
 
-function cadastro_arquivo($conexao, $id_clipagem, $nome) {
-    $query = "INSERT INTO arquivos (id_clipagem, nome) values ($id_clipagem, '$nome')";
+function cadastro_arquivo($conexao, $id_clipagem, $nome, $tipo) {
+    $query = "INSERT INTO arquivos (id_clipagem, nome, tipo) values ($id_clipagem, '$nome', '$tipo')";
     $conexao->query($query);
 }
 

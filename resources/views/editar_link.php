@@ -1,7 +1,7 @@
 <?php FUNCTIONS::getHeader();
 ?>
 <div class="row col-lg-11 col-xl-8 col-md-8 justify-content-center formBody">
-    <h1 class="text-center">Editar Clipagem</h1>
+    <h1 class="text-center"> <i class="fa fa-link"></i> Editar Clipagem</h1>
     <form class="col-lg-12 col-sm-8 row" method="post" action="/editar" enctype="multipart/form-data">
         <div class="form-group col-lg-12">
             <!-- <label for="titulo">Título</label> -->
@@ -41,11 +41,11 @@
             <input class="form-control" type="date" value="<?= $data->format('Y-m-d'); ?>" name="data" placeholder="Data" required>
         </div>
 
-        <div class="form-group col-lg-6">
+       <!--  <div class="form-group col-lg-6">
             <input class="form-control" value="<?=$clipagem['pagina']?>" type="number" name="pagina" placeholder="Página" required>
-        </div>
+        </div> -->
 
-        <div class=" form-group col-lg-6 justify-content-center ">
+     <!--    <div class=" form-group col-lg-6 justify-content-center ">
             <div class="btn-group" data-toggle="buttons">
 
                 <?php if ($clipagem['tipo'] == 'capa'): ?>
@@ -72,7 +72,7 @@
 
 
             </div>
-        </div>
+        </div> -->
 
         <div class="form-group col-lg-12">
             <input class="form-control" type="text" value="<?=$clipagem['tags']?>" name="tags" data-role="tagsinput" id="tagInput" placeholder="Tags" required>
@@ -88,12 +88,15 @@
             <label for="visible" class="ml-2"><strong>Público</strong> (Visibilidade)</label>
         </div>
 
-        <div class="form-group col-lg-12">
+     <!--    <div class="form-group col-lg-12">
             <input id="file" name="file[]" type="file" style="height: 50px;" class="file" data-show-upload="false" data-show-caption="true"
                 data-msg-placeholder="Selecione {arquivos} para a matéria..." multiple>
+        </div> -->
+        <div class="form-group col-lg-12">
+            <input name="link" type="text" style="height: 50px;" placeholder="Endereço de Link" class="form-control" value="<?= $clipagem['nome']?>"required>
         </div>
         <div class="form-group col-lg-12">
-            <input type="hidden" name="tipo_formato" value="arquivo">
+            <input type="hidden" name="tipo_formato" value="link">
             <button class="float-left btn btn-danger col-lg-5" style="height: 50px;" type="button"  onclick="window.location.href='<?= FUNCTIONS::back();?>'">
                 <i class="fa fa-times" aria-hidden="true"></i> CANCELAR </button>
 

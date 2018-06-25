@@ -1,7 +1,22 @@
 $('#file').fileinput({
     theme: 'fa',
     language: 'pt-BR',
-    allowedFileExtensions: ['pdf']
+    allowedFileExtensions: ['pdf'],
+    maxFileSize: 60000,
+});
+
+$('#file_video').fileinput({
+    theme: 'fa',
+    language: 'pt-BR',
+    allowedFileExtensions: ['mp4', 'avi', 'mpg', 'flv', 'mov'],
+    maxFileSize: 60000,
+});
+
+$('#file_audio').fileinput({
+    theme: 'fa',
+    language: 'pt-BR',
+    allowedFileExtensions: ['mp3', 'wav', 'flac', 'aac'],
+    maxFileSize: 60000,
 });
 
 function showSubmit() {

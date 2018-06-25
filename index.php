@@ -12,7 +12,8 @@ if (!isset($_SESSION['login']) || $_SESSION['login'] != true) {
         FUNCTIONS::login($_POST['usuario'], $_POST['senha']);
     } elseif (routeGet('/visitante') && isset($_GET['username'])){
         $username = empty($_GET['username']) ? 'visitante' : $_GET['username'];
-        FUNCTIONS::guestLogin($username);
+        $name = empty($_GET['name']) ? 'Visitante' : $_GET['name'];
+        FUNCTIONS::guestLogin($username, $name);
     } else {
         getView('login');
     }
@@ -50,8 +51,18 @@ if (!isset($_SESSION['login']) || $_SESSION['login'] != true) {
                 getView('menu');
             } else if (routeGet('/login')) {
                 getView('login');
+            } elseif (routeGet('/cadastro/menu')) {
+                getView('cadastro_menu');
             } elseif (routeGet('/cadastro')) {
                 getView('cadastro');
+            } elseif (routeGet('/cadastro/arquivo')) {
+                getView('cadastro');
+            } elseif (routeGet('/cadastro/link')) {
+                getView('cadastro_link');
+            } elseif (routeGet('/cadastro/video')) {
+                getView('cadastro_video');
+            } elseif (routeGet('/cadastro/audio')) {
+                getView('cadastro_audio');
             } elseif (routeAny('/clipagens')) {
                 if (isset($_GET['pesquisar']) && !empty($_GET['pesquisar'])) { 
                     $lista = FUNCTIONS::buscarClipagens();
@@ -71,7 +82,12 @@ if (!isset($_SESSION['login']) || $_SESSION['login'] != true) {
                 $data = [
                     'clipagem' => $clipagem
                 ];
-                getView('editar', $data);
+                if($clipagem['tipo'] == 'audio'): getView('editar_audio', $data);
+                elseif($clipagem['tipo'] == 'video'): getView('editar_video', $data);
+                elseif($clipagem['tipo'] == 'link'): getView('editar_link', $data);
+                else : getView('editar', $data);
+                endif;
+
             } elseif (routePost('/editar')) {
                 FUNCTIONS::editarClipagem();
             } elseif(routeAny('/logon')) {

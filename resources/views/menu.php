@@ -10,7 +10,7 @@
 		</div>
 
 		<div class="col-lg-6">
-			<a href="/cadastro" class="btn btn-primary col-lg-12" style="margin-top: 20px; padding: 30px; border-radius: 0px; font-size: 1.5em">Nova Clipagem <i class="fa fa-plus-square"></i>
+			<a href="/cadastro/menu" class="btn btn-primary col-lg-12" style="margin-top: 20px; padding: 30px; border-radius: 0px; font-size: 1.5em">Nova Clipagem <i class="fa fa-plus-square"></i>
 			</a>	
 		</div>
 
@@ -27,8 +27,13 @@
 
 		<?php  endif;?>
 
-		<div class="col-lg-12">
-			<a href="/informacoes" class="btn btn-secondary col-lg-12" style="margin-top: 20px; padding: 30px; border-radius: 0px; font-size: 25px">INFORMAÇÕES</a>
+		<div class="col-lg-6">
+			<a href="/informacoes" class="btn btn-secondary disabled col-lg-12" style="margin-top: 20px; padding: 30px; border-radius: 0px; font-size: 25px"><i class="fa fa-line-chart	
+"></i> Relatórios</a>
+		</div>
+
+		<div class="col-lg-6">
+			<a href="/informacoes" class="btn btn-secondary col-lg-12" style="margin-top: 20px; padding: 30px; border-radius: 0px; font-size: 25px">INFORMAÇÕES <i class="fa fa-info-circle"></i></a>
 		</div>
 	</div>
 

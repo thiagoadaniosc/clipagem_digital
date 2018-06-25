@@ -41,6 +41,7 @@
                         <small><?= $_SESSION['nome'] ?></small>
                     </button>
                     <div class="dropdown-menu dropdown-menu-right">
+                        <a class="dropdown-item" href="http://intranet.cmsj.info"><i class="fa fa-arrow-left"></i> Intranet </a>
                         <a class="dropdown-item" href="/logon"><i class="fa fa-sign-out"></i> Sair</a>
                     </div>
                 </div>

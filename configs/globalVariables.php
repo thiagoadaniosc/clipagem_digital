@@ -7,6 +7,6 @@ $complete_request_uri = $_SERVER['REQUEST_URI'];
 $request_uri = $request_uri[0];
 $request_method = $_SERVER['REQUEST_METHOD'];
 $security_flag = true;
-$version = '1.3.1 Stable';
+$version = '1.4.0 Stable';
 $version_beta = '1.6.4 Beta';
 $version_alfa = '1.9.2 Alfa';

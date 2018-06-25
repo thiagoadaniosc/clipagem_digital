@@ -24,6 +24,7 @@
 <script src="js/tagsinput.js"></script>
 
 <?php if ($request_uri == "/editar"): ?>
+<?php $fileExtension = pathinfo($clipagem['nome'], PATHINFO_EXTENSION); ?>
 <script>
  $("#file").fileinput({
     initialPreview: [
@@ -39,6 +40,38 @@
     theme: 'fa',
     language: 'pt-BR',
     allowedFileExtensions: ['pdf'],
+});
+
+$("#file_audio").fileinput({
+    initialPreview: [
+        "/uploads/<?= $clipagem['nome'] ?>",
+    ],
+    initialPreviewAsData: true, // allows you to set a raw markup
+    initialPreviewFileType: 'audio', // image is the default and can be overridden in config below
+   // initialPreviewDownloadUrl:' <embed src="/uploads/<?=$clipagem['nome']?>" type="application/pdf"></embed>', // includes the dynamic key tag to be replaced for each config
+    initialPreviewConfig: [
+        {type: "audio", caption: "<?= $clipagem['nome']?>", url: "/uploads/<?= $clipagem['nome']?>", key: <?php echo intval($clipagem['ID'])?>, filetype:'audio/<?= $fileExtension?>'},
+        
+    ],
+    theme: 'fa',
+    language: 'pt-BR',
+    allowedFileExtensions: ['mp3', 'wav', 'flac', 'aac'],
+});
+
+$("#file_video").fileinput({
+    initialPreview: [
+        "/uploads/<?= $clipagem['nome'] ?>",
+    ],
+    initialPreviewAsData: true, // allows you to set a raw markup
+    initialPreviewFileType: 'video', // image is the default and can be overridden in config below
+   // initialPreviewDownloadUrl:' <embed src="/uploads/<?=$clipagem['nome']?>" type="application/pdf"></embed>', // includes the dynamic key tag to be replaced for each config
+    initialPreviewConfig: [
+        {type: "video", caption: "<?= $clipagem['nome']?>", url: "/uploads/<?= $clipagem['nome']?>", key: <?php echo intval($clipagem['ID'])?>, filetype:'video/<?= $fileExtension?>'},
+        
+    ],
+    theme: 'fa',
+    language: 'pt-BR',
+    allowedFileExtensions: ['mp4', 'avi', 'mpg', 'flv', 'mov'],
 });
 </script>
 

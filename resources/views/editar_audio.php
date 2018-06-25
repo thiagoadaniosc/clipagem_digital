@@ -1,7 +1,7 @@
 <?php FUNCTIONS::getHeader();
 ?>
 <div class="row col-lg-11 col-xl-8 col-md-8 justify-content-center formBody">
-    <h1 class="text-center">Editar Clipagem</h1>
+    <h1 class="text-center"> <i class="fa fa-volume-up"></i> Editar Clipagem</h1>
     <form class="col-lg-12 col-sm-8 row" method="post" action="/editar" enctype="multipart/form-data">
         <div class="form-group col-lg-12">
             <!-- <label for="titulo">Título</label> -->
@@ -22,12 +22,12 @@
             <input type="text" value="<?=$clipagem['veiculo']?> " class="form-control col-lg-12" name="veiculo" id="veiculo" placeholder="Veículo" required>
 
         </div>
-
+<!-- 
         <div class="form-group col-lg-6">
             <input type="text" value="<?=$clipagem['editoria']?>" class="form-control col-lg-12" name="editoria" id="editoria" placeholder="Editoria" required>
         </div>
-
-        <div class="form-group col-lg-12">
+ -->
+        <div class="form-group col-lg-6">
             <input class="form-control" value="<?=$clipagem['autor']?>" type="text" name="autor" placeholder="Autor" required>
         </div>
 
@@ -41,11 +41,11 @@
             <input class="form-control" type="date" value="<?= $data->format('Y-m-d'); ?>" name="data" placeholder="Data" required>
         </div>
 
-        <div class="form-group col-lg-6">
+      <!--   <div class="form-group col-lg-6">
             <input class="form-control" value="<?=$clipagem['pagina']?>" type="number" name="pagina" placeholder="Página" required>
-        </div>
+        </div> -->
 
-        <div class=" form-group col-lg-6 justify-content-center ">
+     <!--    <div class=" form-group col-lg-6 justify-content-center ">
             <div class="btn-group" data-toggle="buttons">
 
                 <?php if ($clipagem['tipo'] == 'capa'): ?>
@@ -72,7 +72,7 @@
 
 
             </div>
-        </div>
+        </div> -->
 
         <div class="form-group col-lg-12">
             <input class="form-control" type="text" value="<?=$clipagem['tags']?>" name="tags" data-role="tagsinput" id="tagInput" placeholder="Tags" required>
@@ -89,11 +89,11 @@
         </div>
 
         <div class="form-group col-lg-12">
-            <input id="file" name="file[]" type="file" style="height: 50px;" class="file" data-show-upload="false" data-show-caption="true"
-                data-msg-placeholder="Selecione {arquivos} para a matéria..." multiple>
+            <input id="file_audio" name="file" type="file" style="height: 50px;" class="file" data-show-upload="false" data-show-caption="true"
+                data-msg-placeholder="Selecione um {audio} para a matéria...">
         </div>
         <div class="form-group col-lg-12">
-            <input type="hidden" name="tipo_formato" value="arquivo">
+            <input type="hidden" name="tipo_formato" value="audio">
             <button class="float-left btn btn-danger col-lg-5" style="height: 50px;" type="button"  onclick="window.location.href='<?= FUNCTIONS::back();?>'">
                 <i class="fa fa-times" aria-hidden="true"></i> CANCELAR </button>
 

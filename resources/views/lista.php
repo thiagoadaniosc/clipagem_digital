@@ -2,7 +2,7 @@
 <div class="row col-lg-12 col-xl-11 col-md-12 baseBody" style="overflow-x: auto;">
     <h1 class="text-left col-lg-12" style="padding: 20px;">Lista de Clipagens</h1>
     
-    <form style="padding: 20px;" class="row col-lg-12 col-xl-12 col-md-12 col-sm-12 justify-content-end">
+    <form style="padding: 20px;" id="form-pesquisa" class="row col-lg-12 col-xl-12 col-md-12 col-sm-12 justify-content-end">
         <div class="col-lg-3 col-xl-3 col-md-12">
             <label class="col-lg-4 col-xl-4 float-left" style="padding-top:10px; padding-bottom:10px;" for="show">Exibir: </label>
             <select id="show" class="form-control col-lg-4 col-xl-4 float-left" name="show" style="height: 50px; border-radius: 0">
@@ -116,9 +116,9 @@
     </div>
 </form>
 <?php if( !isset($_GET['show']) || $_GET['show'] <= 100 ): ?>
-    <a href="/pesquisa" class="text-center col-lg-12" style="padding-left: 20px" target="_blank">Baixar Pesquisa</a>
+    <a href="/pesquisa" class="text-center col-lg-12 print-none" style="padding-left: 20px" target="_blank">Baixar Pesquisa</a>
 <?php else : ?>
-    <a href="/" class="text-center col-lg-12" onclick="alert('Máximo de 100 Arquivos por página.');return false;" style="padding-left: 20px" target="_blank">Baixar Pesquisa</a>
+    <a href="/" class="text-center col-lg-12 print-none" onclick="alert('Máximo de 100 Arquivos por página.');return false;" style="padding-left: 20px" target="_blank">Baixar Pesquisa</a>
 <?php endif; ?>
 
 <?php ?>
@@ -143,13 +143,13 @@
             <th scrope="col" style="min-width: 5vw;  max-width: 5px">Editoria</th>
             <th scrope="col" style="min-width: 10vw; max-width: 10px">Autor</th>
             <th scrope="col" class=" text-center m-auto d-xl-table-cell d-lg-table-cell">Data<small><br>(Publicação)</small></th>
-            <th scrope="col" style="min-width: 2vw" align="center">Página</th>
-            <th scrope="col" style="min-width: 8vw;  max-width: 10px" class="d-xl-table-cell d-lg-table-cell d-md-none d-sm-none text-center">Tipo <small><br>(Capa ou Conteúdo interno)</small></th>
+            <th scrope="col" style="min-width: 2vw" class="text-center" align="center">Página</th>
+            <th scrope="col" style="min-width: 8vw;  max-width: 10px" class="d-xl-table-cell d-lg-table-cell d-md-none d-sm-none text-center">Tipo</th>
             <th scrope="col" style="min-width: 15vw;  max-width: 15vw" class="d-xl-table-cell d-lg-table-cell d-md-none d-sm-none">Tags</th>
             <?php if(isAdmin()): ?>
             <th scrope="col" class="d-xl-table-cell d-lg-table-cell d-md-none d-sm-none text-center">Visibilidade</th>
             <?php endif; ?>
-            <th scrope="col" class="text-center" align="center" style="min-width: 8vw">Opções</th>
+            <th scrope="col" class="text-center th-opcoes" align="center" style="min-width: 8vw">Opções</th>
         </thead>
         <tbody>
             <?php 
@@ -164,11 +164,19 @@
             } ?>
             <?php if ($dados['tipo'] == 'capa') {
                 $tipo = 'Capa';
-            } else {
+            } elseif($dados['tipo'] == 'conteudo') {
                 $tipo = 'Conteúdo Interno';
+            } elseif($dados['tipo'] == 'video') {
+                $tipo = 'Arquivo de Vídeo';
+            } elseif($dados['tipo'] == 'audio') {
+                $tipo = 'Arquivo de Audio';
+            } elseif($dados['tipo'] == 'link') {
+                $tipo = 'Link Externo';
             }
-            $_SESSION['arquivos'][$i] = $dados['nome'];
-            $i++;
+            if ($dados['tipo'] == 'conteudo' || $dados['tipo'] == 'capa') {
+                $_SESSION['arquivos'][$i] = $dados['nome'];
+                $i++;
+            }
             ?>
             <tr>
                 <th scope="row"><?=$dados['id_clipagem']?></th>
@@ -177,8 +185,20 @@
                 <td><?=$dados['editoria']?></td>
                 <td><p style="word-wrap: break-word; width: 10vw"><?=$dados['autor']?></p></td>
                 <td><?=$dados['data']?></td>
-                <td><?=$dados['pagina']?></td>
-                <td class="d-xl-table-cell d-lg-table-cell d-md-none d-sm-none text-center"><?=$tipo?></td>
+                <?php if($dados['tipo'] == 'audio') {
+                    $pagina = '<span class="badge badge-primary">Audio</span>';
+                } elseif ($dados['tipo'] == 'video') {
+                     $pagina = '<span class="badge badge-danger">Video</span>';
+                } elseif ($dados['tipo'] == 'link') {
+                     $pagina = '<span class="badge badge-dark">Link</span>';
+                } else {
+                    $pagina = '<span class="badge badge-secondary rounded-0">' .$dados['pagina'] .'</span>';
+                }
+
+                 ?>
+                <td class="text-center"><?=$pagina?></td>
+
+                <td class="d-xl-table-cell d-lg-table-cell d-md-none d-sm-none text-center"><span class="badge badge-secondary"><?=$tipo?></span></td>
                 <td class="d-xl-table-cell d-lg-table-cell d-md-none d-sm-none overflow-x">                
                         <?php $tags_array = explode(',', $dados['tags']);
                             foreach ($tags_array as $tags) {
@@ -194,13 +214,20 @@
                 </td>
                 <?php endif; ?>
 
-                <td align="center">
+                <td align="center" class="th-opcoes">
+                    <?php 
+                    if ($dados['tipo'] == 'link') { // Upload Link
+                        $upload_link = $dados['nome'];
+                    } else {
+                        $upload_link = 'uploads/' . $dados['nome'];
+                    }
+                    ?>
                     <?php if ($_SESSION['admin'] == true):?> 
-                        <a class="badge badge-primary" href="uploads/<?=$dados['nome']?>" target="_blank"><i class="fa fa-eye"></i></a>
+                        <a class="badge badge-primary" href="<?= $upload_link ?>" target="_blank"><i class="fa fa-eye"></i></a>
                         <a class="badge badge-secondary bg-dark" href="/editar?id=<?=$dados['id_clipagem']?>"><i class="fa fa-edit"></i></a>
                         <a class="badge badge-danger" onclick="return confirm('Tem certeza que deseja remover este item ? ')" href="/deletar?id=<?=$dados['id_clipagem']?>"><i class="fa fa-trash-o"></i></a>
                     <?php else:  ?>
-                        <a class="badge badge-primary" href="uploads/<?=$dados['nome']?>" target="_blank"> Visualizar <i class="fa fa-eye"></i></a>
+                        <a class="badge badge-primary" href="<?= $upload_link ?>" target="_blank"> Visualizar <i class="fa fa-eye"></i></a>
                     <?php endif;?>
                 </td>
             </tr>

@@ -104,3 +104,25 @@ input {
     border: 1px solid #ced4da;
     padding: .375rem .75rem;
 }
+
+@media print{
+    .navbar, .pagination, .th-opcoes, caption, thead  {
+        display:none;
+    }
+    #form-pesquisa {
+        display: none;
+    }
+
+    .print-none {
+        display: none;
+    }
+
+    .baseBody {
+        /*margin-top:20px !important;*/
+        /*padding-top: 0 !important;*/
+    }
+
+    table {
+        border:0px !important;
+    }
+}
