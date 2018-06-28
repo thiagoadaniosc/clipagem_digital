@@ -214,3 +214,15 @@ function updateUser($conexao, $id, $display_name, $username, $email, $password,$
 function getQuery($conexao, $query){
     return $conexao->query($query);
 }
+
+function countClipagens($conexao, $tipo = 'all'){
+    if ($tipo == 'all') {
+        $count_query = 'select COUNT(*) as total from clipagens as c inner join arquivos a on c.ID = a.id_clipagem';  
+    } else{
+        $count_query = "select COUNT(*) as total from clipagens as c inner join arquivos a on c.ID = a.id_clipagem where a.tipo = '{$tipo}'";
+
+    }
+    $result = $conexao->query($count_query);
+    $data = $result->fetch_assoc();
+    return $data['total'];
+}

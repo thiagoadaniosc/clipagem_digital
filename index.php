@@ -45,7 +45,7 @@ if (!isset($_SESSION['login']) || $_SESSION['login'] != true) {
             } else {
                 redirect('/');
             }
-        } else {
+        } else { // Routes Administrator
 
             if (routeGet('/')) {
                 getView('menu');
@@ -102,6 +102,15 @@ if (!isset($_SESSION['login']) || $_SESSION['login'] != true) {
                 FUNCTIONS::downloadPesquisa();
             } elseif (routeGet('/informacoes')) {
                 getView('informacoes');
+            } elseif (routeGet('/relatorios')) {
+                $data = [
+                    'total_clipagens' => FUNCTIONS::getTotalClipagens(),
+                    'total_arquivos' => FUNCTIONS::getTotalClipagens('pdf'),
+                    'total_link' => FUNCTIONS::getTotalClipagens('link'),
+                    'total_video' => FUNCTIONS::getTotalClipagens('video'),
+                    'total_audio' => FUNCTIONS::getTotalClipagens('audio'),
+                ];
+                getView('relatorios', $data);
             } elseif (routeAny('teste')) { 
                 $data = [
                     'lista' =>  FUNCTIONS::listarClipagens()

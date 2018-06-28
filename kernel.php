@@ -63,3 +63,30 @@ function redirect($route = '/'){
 	header("Location: {$route}");
 	exit;
 }
+
+function returnBack(){
+	$route = $_SERVER['HTTP_REFERER'];
+	redirect($route);
+	exit;
+}
+
+function filter_string($var) {
+	return filter_var($var, FILTER_SANITIZE_STRING);
+}
+
+function filter_integer($var) {
+	if (filter_var($var, FILTER_VALIDATE_INT)) {
+		return filter_var($var, FILTER_VALIDATE_INT);
+	} else {
+		return 0;
+	}
+}
+
+function filter_date ($data) {
+	$date = new DateTime($data);
+    return $data = $date->format('d/m/Y');
+}
+
+// function validator(array $fields){
+
+// }

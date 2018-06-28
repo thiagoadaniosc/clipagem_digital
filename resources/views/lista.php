@@ -183,7 +183,16 @@
                 <td><?=$dados['titulo']?></td>
                 <td><?=$dados['veiculo']?></td>
                 <td><?=$dados['editoria']?></td>
-                <td><p style="word-wrap: break-word; width: 10vw"><?=$dados['autor']?></p></td>
+                <td>
+                    <?php if(strpos($dados['autor'], "http") !== FALSE || strpos($dados['autor'], 'https') !==FALSE): ?>
+                    <a href='<?= $dados['autor'] ?>' class="badge badge-primary" title="">
+                      <i class="fa fa-eye"></i> Acessar Link
+                    </a>
+                    <?php else : ?>
+                    <p style="word-wrap: break-word; width: 10vw"><?=$dados['autor']?></p>
+                    <?= strpos($dados['autor'], "com")?>
+                    <?php endif ?>
+                </td>
                 <td><?=$dados['data']?></td>
                 <?php if($dados['tipo'] == 'audio') {
                     $pagina = '<span class="badge badge-primary">Audio</span>';

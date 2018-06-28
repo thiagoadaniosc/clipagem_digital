@@ -23,22 +23,31 @@ class FUNCTIONS {
         cadastro_arquivo($conexao, $id_clipagem, 'teste.pdf');
         
     }*/
+
+    public function filter_string($var) {
+        return filter_var($var, FILTER_SANITIZE_STRING);
+    }
+
+    public function filter_integer($var) {
+        if (filter_var($var, FILTER_VALIDATE_INT)) {
+        return filter_var($var, FILTER_VALIDATE_INT);
+        } else {
+            return 0;
+        }
+    }
     
     public static function cadastrarClipagem() {
-
         $conexao = mysqlCon();
         
-        $titulo = $_POST['titulo'];
-        $veiculo = $_POST['veiculo'];
-        $editoria = isset($_POST['editoria']) ? $_POST['editoria'] : ' ';
-        $autor = $_POST['autor'];
-        $data = $_POST['data'];
-        $date = new DateTime($data);
-        $data = $date->format('d/m/Y');
-        $pagina = isset($_POST['pagina']) ? $_POST['pagina'] : 0;
-        $tipo = isset($_POST['tipo']) ? $_POST['tipo'] : $_POST['tipo_formato'];
-        $tags = $_POST['tags'];
-        $visible = $_POST['visible'];
+        $titulo = filter_string($_POST['titulo']); //FILTER_SANITIZE_SPECIAL_CHARS
+        $veiculo = filter_string($_POST['veiculo']);
+        $editoria = filter_string(isset($_POST['editoria']) ? $_POST['editoria'] : ' ');
+        $autor = filter_string($_POST['autor']);
+        $data = filter_date($_POST['data']);
+        $pagina = filter_integer(isset($_POST['pagina']) ? $_POST['pagina'] : 0);
+        $tipo = filter_string(isset($_POST['tipo']) ? $_POST['tipo'] : $_POST['tipo_formato']);
+        $tags = filter_string($_POST['tags']);
+        $visible = filter_string($_POST['visible']);
         
         $conexao = cadastro_clipagem($conexao, $titulo, $veiculo, $editoria, $autor, $data, $pagina, $tipo, $tags, $visible);
         $id_clipagem = $conexao->insert_id;
@@ -82,7 +91,7 @@ class FUNCTIONS {
             $fileName = $_POST['link'];
         }
 
-        cadastro_arquivo($conexao, $id_clipagem, $fileName, $_POST['tipo']);
+        cadastro_arquivo($conexao, $id_clipagem, $fileName, $_POST['tipo_formato']);
 
         
     }
@@ -91,21 +100,18 @@ class FUNCTIONS {
         require_once 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
         $pdf = new \Clegginabox\PDFMerger\PDFMerger;
         $conexao = mysqlCon();
-        $id = $_POST['id'];
-        $titulo = $_POST['titulo'];
-        $veiculo = $_POST['veiculo'];
-        $editoria = isset($_POST['editoria']) ? $_POST['editoria'] : ' ';
-        $autor = $_POST['autor'];
-        $data = $_POST['data'];
-        $date = new DateTime($data);
-        $data = $date->format('d/m/Y');
-        $pagina = isset($_POST['pagina']) ? $_POST['pagina'] : 0;
-        $tipo = isset($_POST['tipo']) ? $_POST['tipo'] : $_POST['tipo_formato'];
-        $tags = $_POST['tags'];
-        $visible = $_POST['visible'];
-        $tipo_formato = $_POST['tipo_formato'];
-        
-        
+
+        $id = filter_integer($_POST['id']);
+        $titulo = filter_string($_POST['titulo']);
+        $veiculo = filter_string($_POST['veiculo']);
+        $editoria = filter_string(isset($_POST['editoria']) ? $_POST['editoria'] : ' ');
+        $autor = filter_string($_POST['autor']);
+        $data = filter_date($_POST['data']);
+        $pagina = filter_integer(isset($_POST['pagina']) ? $_POST['pagina'] : 0);
+        $tipo = filter_string(isset($_POST['tipo']) ? $_POST['tipo'] : $_POST['tipo_formato']);
+        $tags = filter_string($_POST['tags']);
+        $visible = filter_integer($_POST['visible']);
+        $tipo_formato = filter_string($_POST['tipo_formato']);
         
         atualizarClipagem($conexao,$id, $titulo, $veiculo, $editoria, $autor, $data, $pagina, $tipo, $tags, $visible);
         if ($tipo_formato == 'arquivo') {
@@ -206,6 +212,12 @@ class FUNCTIONS {
         $totalReg = getNumRowsBusca($conexao, $valor, $pesquisar, $ano, $mes);
         return $totalReg;
     }
+
+    public static function getTotalClipagens($tipo = 'all') {
+        $conn = mysqlCon();
+        return countClipagens($conn, $tipo);
+    }
+
     
     public static function buscarClipagens() {
         $conexao = mysqlCon();

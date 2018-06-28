@@ -105,6 +105,22 @@ input {
     padding: .375rem .75rem;
 }
 
+.relatorios li {
+    padding-bottom:10px;
+    padding-top:10px;
+}
+
+.relatorios h2 {
+    font-size: 1.2em;
+}
+
+.relatorios-card {
+    /*height: 150px;*/
+    padding-top:20px;
+    padding-bottom:20px;
+    margin-left: 5px;
+}
+
 @media print{
     .navbar, .pagination, .th-opcoes, caption, thead  {
         display:none;
