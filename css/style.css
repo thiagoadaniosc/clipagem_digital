@@ -121,6 +121,17 @@ input {
     margin-left: 5px;
 }
 
+.relatorios-body {
+    border-left: 6px solid rgb(66, 107, 194);
+    border-right: 6px solid rgb(66, 107, 194);
+}
+
+.relatorios-header {
+    font-size: 1.2em;
+    background-color: rgb(66, 107, 194);
+    border-bottom: 4px solid #2a5298;
+}
+
 @media print{
     .navbar, .pagination, .th-opcoes, caption, thead  {
         display:none;

@@ -226,3 +226,15 @@ function countClipagens($conexao, $tipo = 'all'){
     $data = $result->fetch_assoc();
     return $data['total'];
 }
+
+function countClipagensToday($conexao){
+    $date = date('d/m/Y');
+    $count_query = "select COUNT(*) as total from clipagens as c inner join arquivos a on c.ID = a.id_clipagem where c.data = '{$date}'";
+    $result = $conexao->query($count_query);
+    if ($result) {
+    $data = $result->fetch_assoc();
+    return $data['total'];  
+} else {
+    return 0;
+}
+}

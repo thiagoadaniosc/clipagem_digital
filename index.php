@@ -109,6 +109,7 @@ if (!isset($_SESSION['login']) || $_SESSION['login'] != true) {
                     'total_link' => FUNCTIONS::getTotalClipagens('link'),
                     'total_video' => FUNCTIONS::getTotalClipagens('video'),
                     'total_audio' => FUNCTIONS::getTotalClipagens('audio'),
+                    'total_today' => FUNCTIONS::getTotalClipagensToday()
                 ];
                 getView('relatorios', $data);
             } elseif (routeAny('teste')) { 

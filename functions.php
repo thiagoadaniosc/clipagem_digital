@@ -218,6 +218,11 @@ class FUNCTIONS {
         return countClipagens($conn, $tipo);
     }
 
+    public static function getTotalClipagensToday() {
+        $conn = mysqlCon();
+        return countClipagensToday($conn);
+    }
+
     
     public static function buscarClipagens() {
         $conexao = mysqlCon();
