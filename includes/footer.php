@@ -80,7 +80,7 @@ $("#file_video").fileinput({
 <script src="js/script.js"></script>
 
  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-migrate/3.0.1/jquery-migrate.min.js"></script>
- {{-- <script src="http://code.jquery.com/jquery-migrate-3.0.0.js"></script> --}}
+ <script src="http://code.jquery.com/jquery-migrate-3.0.0.js"></script> 
  <script src="https://cdnjs.cloudflare.com/ajax/libs/waypoints/2.0.3/waypoints.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Counter-Up/1.0.0/jquery.counterup.js"></script>
 <script type="text/javascript">

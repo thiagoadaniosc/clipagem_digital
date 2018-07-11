@@ -41,7 +41,7 @@ function routeGet($route){
 }
 
 function routePost($route){
-		global $request_uri;
+	global $request_uri;
 	global $request_method;
 	if ($route == $request_uri && $request_method == 'POST') {
 		return true;
@@ -85,6 +85,11 @@ function filter_integer($var) {
 function filter_date ($data) {
 	$date = new DateTime($data);
     return $data = $date->format('d/m/Y');
+}
+
+function dd($value){
+	echo  '<h1 style="text-align:center">'.$value . '<h1>';
+	exit;
 }
 
 // function validator(array $fields){

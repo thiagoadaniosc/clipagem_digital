@@ -1,41 +1,6 @@
 <?php
 class FUNCTIONS {
 
-    public static function dd($value){
-        echo  '<h1 style="text-align:center">'.$value . '<h1>';
-        exit;
-    }
-
-    /* public static function cadastrarClipagemTest() { 
-        $conexao = mysqlCon();
-        
-        $titulo = 'teste';
-        $veiculo = 'teste';
-        $editoria = 'teste';
-        $autor ='teste';
-        $data = '07/12/1995';
-        $pagina = 2;
-        $tipo ='teste';
-        $tags = 'teste';
-        
-        $conexao = cadastro_clipagem($conexao, $titulo, $veiculo, $editoria, $autor, $data, $pagina, $tipo, $tags);
-        $id_clipagem = $conexao->insert_id;
-        cadastro_arquivo($conexao, $id_clipagem, 'teste.pdf');
-        
-    }*/
-
-    public function filter_string($var) {
-        return filter_var($var, FILTER_SANITIZE_STRING);
-    }
-
-    public function filter_integer($var) {
-        if (filter_var($var, FILTER_VALIDATE_INT)) {
-        return filter_var($var, FILTER_VALIDATE_INT);
-        } else {
-            return 0;
-        }
-    }
-    
     public static function cadastrarClipagem() {
         $conexao = mysqlCon();
         
@@ -137,168 +102,267 @@ class FUNCTIONS {
         } elseif ($tipo_formato == 'audio'){
             if (!empty($_FILES['file']['name'])){
 
-                 $date = new DateTime($_POST['data']);
-                $data = $date->format('d-m-Y');
-                $fileName = $data . '-' . $id;
-                $audio = $_FILES['file'];
-                $tmp_name = $_FILES['file']['tmp_name'];
-                $extension = pathinfo($audio['name'], PATHINFO_EXTENSION);
+             $date = new DateTime($_POST['data']);
+             $data = $date->format('d-m-Y');
+             $fileName = $data . '-' . $id;
+             $audio = $_FILES['file'];
+             $tmp_name = $_FILES['file']['tmp_name'];
+             $extension = pathinfo($audio['name'], PATHINFO_EXTENSION);
 
-                $fileName = $fileName . '.' . $extension;
-                move_uploaded_file($tmp_name, dirname( __FILE__ ) . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR .  $fileName);                
-                
-                $arquivo =  buscarArquivo($conexao, $id);
+             $fileName = $fileName . '.' . $extension;
+             move_uploaded_file($tmp_name, dirname( __FILE__ ) . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR .  $fileName);                
 
-                atualizarArquivo($conexao, $arquivo['ID'], $fileName);
-            }
+             $arquivo =  buscarArquivo($conexao, $id);
 
-        } elseif ($tipo_formato == 'video'){
-            if (!empty($_FILES['file']['name'])){
-                
-                $date = new DateTime($_POST['data']);
-                $data = $date->format('d-m-Y');
-                $fileName = $data . '-' . $id;
-                $video = $_FILES['file'];
-                $tmp_name = $_FILES['file']['tmp_name'];
-                $extension = pathinfo($video['name'], PATHINFO_EXTENSION);
+             atualizarArquivo($conexao, $arquivo['ID'], $fileName);
+         }
 
-                $fileName = $fileName . '.' . $extension;
-                move_uploaded_file($tmp_name, dirname( __FILE__ ) . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR .  $fileName);                
-                
-                $arquivo =  buscarArquivo($conexao, $id);
+     } elseif ($tipo_formato == 'video'){
+        if (!empty($_FILES['file']['name'])){
 
-                atualizarArquivo($conexao, $arquivo['ID'], $fileName);
-            }
-        } elseif ($tipo_formato == 'link'){
-            $fileName = $_POST['link'];
+            $date = new DateTime($_POST['data']);
+            $data = $date->format('d-m-Y');
+            $fileName = $data . '-' . $id;
+            $video = $_FILES['file'];
+            $tmp_name = $_FILES['file']['tmp_name'];
+            $extension = pathinfo($video['name'], PATHINFO_EXTENSION);
+
+            $fileName = $fileName . '.' . $extension;
+            move_uploaded_file($tmp_name, dirname( __FILE__ ) . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR .  $fileName);                
+
             $arquivo =  buscarArquivo($conexao, $id);
-            atualizarArquivo($conexao, $arquivo['ID'], $fileName);        
+
+            atualizarArquivo($conexao, $arquivo['ID'], $fileName);
         }
-        
-        redirect('/clipagens');
-        
-        
+    } elseif ($tipo_formato == 'link'){
+        $fileName = $_POST['link'];
+        $arquivo =  buscarArquivo($conexao, $id);
+        atualizarArquivo($conexao, $arquivo['ID'], $fileName);        
     }
-    
-    public static function listarClipagens() {
+
+    redirect('/clipagens');
+
+
+}
+
+public static function showArquivoClipagem() {
+    if (isset($_GET['fileName'])) {
+        $fileName = filter_string($_GET['fileName']);
         $conexao = mysqlCon();
-        
-        $show = isset($_GET['show']) && !empty($_GET['show']) ? $_GET['show'] : 10;
-        $page = isset($_GET['page']) && !empty($_GET['page']) ? $_GET['page'] : 1;
-        
-        if ($page == 1 ){
-            $inicio = 0;
-            $fim = $show;
+        $clipagem = buscarClipagemArquivoByName($conexao, $fileName);
+        if ($clipagem) { 
+            Self::criarPDF($fileName, $clipagem->titulo, $clipagem->veiculo, $clipagem->autor, $clipagem->pagina, $clipagem->data);
         } else {
-            $inicio = ($page-1) * $show;
-            $fim = $show;
+
         }
-
-        $lista = listar($conexao, $inicio, $fim);
-        $totalReg = FUNCTIONS::totalRegClipagens();
-        $_SESSION['totalReg'] = $totalReg;
-        
-        return $lista;
+    } else {
+        redirect('/');
     }
 
-    public static function totalRegClipagens(){
-        $conexao = mysqlCon();
-        $totalReg = getNumRows($conexao);
-        return $totalReg;
+}
+
+public static function criarPDF($fileName, $titulo, $veiculo, $autor, $pagina, $data) {
+    $pdf = new setasign\Fpdi\FPDI();
+    $file = 'uploads/'.$fileName;
+    if (file_exists($file)) {
+        $pageCount = $pdf->setSourceFile($file);
+        for ($i=1; $i <= $pageCount ; $i++) { 
+            $pdf->addPage();
+            $pdf->setTitle($fileName, true);
+            $pdf->SetAuthor('CMSJ');
+            $pdf->Line(5, 20, 215-10, 20); 
+            $pdf->Image('img/brasao.jpg', 100 ,2, 10);
+            $pdf->setFont('Arial', 'I', 8);
+            $pdf->Text(95,14, utf8_decode('Clipagem Digital' ));
+            $pdf->setFont('Arial', 'B', 8);
+            $pdf->Text(85,18, utf8_decode('Câmara Municipal de São José'));
+            // $pdf->Cell(15,5, ' ');
+            // $pdf->Text(40,10, utf8_decode('Clipagem Digital - CMSJ'));
+            $pdf->setFont('Arial', 'B', 8);
+            $pdf->Text(25,28, utf8_decode('Título:'));
+            $pdf->setFont('Arial', 'I', 8);
+            $pdf->Text(35,28, utf8_decode($titulo));
+
+            $pdf->setFont('Arial', 'B', 8);
+            $pdf->Text(25,32, utf8_decode('Veículo:'));
+            $pdf->setFont('Arial', 'I', 8);
+            $pdf->Text(37,32, utf8_decode($veiculo));
+
+            $pdf->setFont('Arial', 'B', 8);
+            $pdf->Text(160, 28, utf8_decode('Autor:'));
+            $pdf->setFont('Arial', 'I', 8);
+            $pdf->Text(170,28, utf8_decode($autor));
+
+            $pdf->setFont('Arial', 'B', 8);
+            $pdf->Text(160, 32, utf8_decode('Data:'));
+            $pdf->setFont('Arial', 'I', 8);
+            $pdf->Text(170,32, utf8_decode($data));
+
+            $pageId = $pdf->importPage($i, setasign\Fpdi\PdfReader\PageBoundaries::MEDIA_BOX);
+             // $pdf->Write(8, 'A complete document imported with FPDI');
+            $pdf->useImportedPage($pageId, 15,35, 180);
+        }      
+        $pdf->Output('I', $fileName);  
+    } else {
+        $pdf->addPage();
+        $pdf->SetFont('Helvetica');
+        $pdf->Text(60,20, utf8_decode($file.', Arquivo não encontrado'));
+        $pdf->Output();  
     }
-    
-    public static function totalRegClipagensBusca($valor, $pesquisar, $ano, $mes){
-        $conexao = mysqlCon();
-        $totalReg = getNumRowsBusca($conexao, $valor, $pesquisar, $ano, $mes);
-        return $totalReg;
+}
+
+public static function joinFiles() {
+    $pdf = new setasign\Fpdi\FPDI();
+    $fileName = filter_string($_POST['fileName'] . '.pdf');
+    $pdf->setTitle($fileName, true);
+    $pdf->SetAuthor('CMSJ');
+    $files = $_FILES['file'];
+    $file_flag = 1;
+    // var_dump($files);
+    foreach ($files['tmp_name'] as $file) {
+        $file_upload_name = 'join_'.$_SESSION['usuario'] . '_'. $file_flag . '.pdf';
+        $file_flag++;
+        $file_complete_path = dirname( __FILE__ ) . DIRECTORY_SEPARATOR . 'pesquisas' . DIRECTORY_SEPARATOR . $file_upload_name;
+        if (file_exists($file_complete_path)) {
+            unlink($file_complete_path);
+        }
+        move_uploaded_file($file, $file_complete_path); 
+        if (file_exists($file_complete_path)) {
+            $pageCount = $pdf->setSourceFile($file_complete_path);
+            for ($i=1; $i <= $pageCount ; $i++) { 
+                $pdf->addPage();
+                $pageId = $pdf->importPage($i, setasign\Fpdi\PdfReader\PageBoundaries::MEDIA_BOX);
+                $pdf->useImportedPage($pageId, 0,0, 200);
+            }
+        }
     }
 
-    public static function getTotalClipagens($tipo = 'all') {
-        $conn = mysqlCon();
-        return countClipagens($conn, $tipo);
+    $pdf->Output('I', $fileName);  
+}
+
+
+public static function listarClipagens() {
+    $conexao = mysqlCon();
+
+    $show = isset($_GET['show']) && !empty($_GET['show']) ? $_GET['show'] : 10;
+    $page = isset($_GET['page']) && !empty($_GET['page']) ? $_GET['page'] : 1;
+
+    if ($page == 1 ){
+        $inicio = 0;
+        $fim = $show;
+    } else {
+        $inicio = ($page-1) * $show;
+        $fim = $show;
     }
 
-    public static function getTotalClipagensToday() {
-        $conn = mysqlCon();
-        return countClipagensToday($conn);
-    }
+    $lista = listar($conexao, $inicio, $fim);
+    $totalReg = FUNCTIONS::totalRegClipagens();
+    $_SESSION['totalReg'] = $totalReg;
 
-    
-    public static function buscarClipagens() {
-        $conexao = mysqlCon();
-        $pesquisar = $_GET['pesquisar'];
-        $valor = $_GET['valor'];
-        
-        $show = isset($_GET['show']) && !empty($_GET['show']) ? $_GET['show'] : 10;
-        $page = isset($_GET['page']) && !empty($_GET['page']) ? $_GET['page'] : 1;
-        
-        if ($page == 1 ){
-            $inicio = 0;
-            $fim = $show;
-        } else {
-            $inicio = ($page-1) * $show;
-            $fim = $show;
-        }        
-        
-        
-        $ano = isset($_GET['ano']) && !empty($_GET['ano']) ? $_GET['ano'] : '';
-        $mes = isset($_GET['mes']) && !empty($_GET['mes']) ? '/' . $_GET['mes'] . '/' : '';
-        
-        $lista = buscar($conexao,$pesquisar, $valor, $ano, $mes, $inicio, $fim);
-        $totalReg = FUNCTIONS::totalRegClipagensBusca($valor, $pesquisar, $ano, $mes);
-        $_SESSION['totalReg'] = $totalReg;
-        return $lista;
-    }
-    
-    public static function buscarClipagem($id){
-        $conexao = mysqlCon();
-        return buscarClipagem($conexao, $id);      
-        
-    }
-    
-    public static function deletarClipagem() {
-        $conexao = mysqlCon();
-        $id = $_GET['id'];
-        deletar($conexao,$id);
-        redirect('/clipagens');
-    }
-    
-    public static function downloadPesquisa(){
-        require_once 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
-        $pdf = new \Clegginabox\PDFMerger\PDFMerger;
-        $i = 0;
+    return $lista;
+}
 
-        if (isset($_SESSION['arquivos'])) {
-            $fileName = $_SESSION['usuario']. '_' . 'pesquisa.pdf';
-            foreach($_SESSION['arquivos'] as $arquivo){
-                $extension = pathinfo($arquivo, PATHINFO_EXTENSION);
-                if ($extension == 'pdf') {
-                    if(file_exists('uploads/' . $arquivo)) {
-                        $pdf->addPDF('uploads'. DIRECTORY_SEPARATOR . $arquivo, 'all');
-                        $i++;
-                    }
+public static function totalRegClipagens(){
+    $conexao = mysqlCon();
+    $totalReg = getNumRows($conexao);
+    return $totalReg;
+}
+
+public static function totalRegClipagensBusca($valor, $pesquisar, $ano, $mes){
+    $conexao = mysqlCon();
+    $totalReg = getNumRowsBusca($conexao, $valor, $pesquisar, $ano, $mes);
+    return $totalReg;
+}
+
+public static function getTotalClipagens($tipo = 'all') {
+    $conn = mysqlCon();
+    return countClipagens($conn, $tipo);
+}
+
+public static function getTotalClipagensToday() {
+    $conn = mysqlCon();
+    return countClipagensToday($conn);
+}
+
+
+public static function buscarClipagens() {
+    $conexao = mysqlCon();
+    $pesquisar = $_GET['pesquisar'];
+    $valor = $_GET['valor'];
+
+    $show = isset($_GET['show']) && !empty($_GET['show']) ? $_GET['show'] : 10;
+    $page = isset($_GET['page']) && !empty($_GET['page']) ? $_GET['page'] : 1;
+
+    if ($page == 1 ){
+        $inicio = 0;
+        $fim = $show;
+    } else {
+        $inicio = ($page-1) * $show;
+        $fim = $show;
+    }        
+
+
+    $ano = isset($_GET['ano']) && !empty($_GET['ano']) ? $_GET['ano'] : '';
+    $mes = isset($_GET['mes']) && !empty($_GET['mes']) ? '/' . $_GET['mes'] . '/' : '';
+
+    $lista = buscar($conexao,$pesquisar, $valor, $ano, $mes, $inicio, $fim);
+    $totalReg = FUNCTIONS::totalRegClipagensBusca($valor, $pesquisar, $ano, $mes);
+    $_SESSION['totalReg'] = $totalReg;
+    return $lista;
+}
+
+public static function buscarClipagem($id){
+    $conexao = mysqlCon();
+    return buscarClipagem($conexao, $id);      
+
+}
+
+public static function deletarClipagem() {
+    $conexao = mysqlCon();
+    $id = $_GET['id'];
+    deletar($conexao,$id);
+    redirect('/clipagens');
+}
+
+public static function downloadPesquisa(){
+    // require_once 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
+    $pdf = new \Clegginabox\PDFMerger\PDFMerger;
+    $i = 0;
+
+    if (isset($_SESSION['arquivos'])) {
+        $fileName = $_SESSION['usuario']. '_' . 'pesquisa.pdf';
+        foreach($_SESSION['arquivos'] as $arquivo){
+            $extension = pathinfo($arquivo, PATHINFO_EXTENSION);
+            if ($extension == 'pdf') {
+                if(file_exists('uploads/' . $arquivo)) {
+                    $pdf->addPDF('uploads'. DIRECTORY_SEPARATOR . $arquivo, 'all');
+                    $i++;
                 }
             }
-            if ($i != 0) {
-                $pdf->merge('file', 'pesquisas'. DIRECTORY_SEPARATOR . $fileName);
-                redirect('/pesquisas' .DIRECTORY_SEPARATOR. $fileName);
-            } else {
-                redirect('/clipagens');
-            }
-
+        }
+        if ($i != 0) {
+            $pdf->merge('file', 'pesquisas'. DIRECTORY_SEPARATOR . $fileName);
+            redirect('/pesquisas' .DIRECTORY_SEPARATOR. $fileName);
         } else {
-         redirect('/clipagens');   
-     }
+            redirect('/clipagens');
+        }
+
+    } else {
+     redirect('/clipagens');   
  }
- public static function guestLogin($username, $name){
-    $_SESSION['usuario'] = $username;
-    $_SESSION['nome'] = $name;
+}
+
+public static function guestLogin($username, $name){
+    $_SESSION['usuario'] = filter_string($username);
+    $_SESSION['nome'] = filter_string($name);
     $_SESSION['admin'] = false;
     $_SESSION['login'] = true;
     return redirect('/clipagens'); 
 }
 
 public static function login($username, $password){
+    $username = filter_string($username);
+    $password = filter_string($password);
     if (empty($username) || empty($password)) {
         redirect('/');
     }
@@ -465,7 +529,7 @@ public static function createDB(){
 
 public static function createDir($dirname) {
     if (!is_dir(dirname(__FILE__) . DIRECTORY_SEPARATOR. $dirname )) {
-    mkdir( dirname(__FILE__) . DIRECTORY_SEPARATOR. $dirname, 0777, true );
+        mkdir( dirname(__FILE__) . DIRECTORY_SEPARATOR. $dirname, 0777, true );
     }
 }
 
@@ -522,7 +586,7 @@ public static function jsonClipagens($inicio, $fim){
     $clipagens = listar($conexao, $inicio, $fim);
     $clipagensArray = array();
     while($clipagem = $clipagens->fetch_assoc()) {
-        
+
         array_push($clipagensArray, $clipagem);
     } 
     $query_result = getQuery($conexao,$query = "SELECT COUNT(*) FROM clipagens;")->fetch_assoc()['COUNT(*)'];
@@ -537,7 +601,7 @@ public static function jsonClipagens($inicio, $fim){
     array_push($clipagensArray, $dados);
 
     echo json_encode($clipagensArray);
- 
+
 
 
 }

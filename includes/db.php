@@ -127,6 +127,12 @@ function buscarClipagem($conexao, $id) {
     }
 }
 
+function buscarClipagemArquivoByName($conexao, $fileName) {
+    $query = "select * from clipagens as c inner join arquivos a on c.ID = a.id_clipagem where a.nome LIKE '{$fileName}' LIMIT 1";
+    $results = $conexao->query($query);
+    return (object) $results->fetch_assoc();
+}
+
 function deletar($conexao, $id) {
     $query = "DELETE FROM clipagens WHERE ID = $id";
     $conexao->query($query);

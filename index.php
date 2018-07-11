@@ -1,11 +1,5 @@
 <?php 
-ini_set('default_charset', 'UTF-8');
-session_start();
-require_once 'kernel.php';
-require_once 'configs/globalVariables.php';
-require_once 'includes' . DIRECTORY_SEPARATOR . 'db.php';
-require 'configs' . DIRECTORY_SEPARATOR . 'ad.php';
-require_once 'functions.php';
+require_once 'bootstrap.php';
 
 if (!isset($_SESSION['login']) || $_SESSION['login'] != true) {
     if (routeAny('/logar')) {
@@ -100,7 +94,16 @@ if (!isset($_SESSION['login']) || $_SESSION['login'] != true) {
                 FUNCTIONS::deletarClipagem();
             } elseif(routeGet('/pesquisa')) {
                 FUNCTIONS::downloadPesquisa();
-            } elseif (routeGet('/informacoes')) {
+            } elseif (routeAny('/clipagem/show')) {
+                FUNCTIONS::showArquivoClipagem();
+            } elseif (routeAny('/juntar-pdf')) {
+                getView('arquivos');
+            } elseif (routeAny('/arquivos/juntar')) {
+                FUNCTIONS::joinFiles();
+            } elseif (routeAny('/arquivos/upload')) {
+                echo json_encode('success');
+            }    
+            elseif (routeGet('/informacoes')) {
                 getView('informacoes');
             } elseif (routeGet('/relatorios')) {
                 $data = [
@@ -113,10 +116,7 @@ if (!isset($_SESSION['login']) || $_SESSION['login'] != true) {
                 ];
                 getView('relatorios', $data);
             } elseif (routeAny('teste')) { 
-                $data = [
-                    'lista' =>  FUNCTIONS::listarClipagens()
-                ];
-                getView('lista', $data);
+                FUNCTIONS::testeFPDF();
             } else if(routeGet('/usuarios')){
                 $data = [
                     'usuarios' => FUNCTIONS::dbShowUsers()

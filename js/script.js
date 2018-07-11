@@ -2,7 +2,20 @@ $('#file').fileinput({
     theme: 'fa',
     language: 'pt-BR',
     allowedFileExtensions: ['pdf'],
+    maxFileSize: 600000,
+});
+
+$('#file_join').fileinput({
+    theme: 'fa',
+    language: 'pt-BR',
+    allowedFileExtensions: ['pdf'],
     maxFileSize: 60000,
+    // dropZoneEnabled: true,
+     minFileCount: 0,
+    // maxFileCount: 10,
+    showUpload: false,
+    uploadUrl : '/arquivos/upload',
+    showRemove: true
 });
 
 $('#file_video').fileinput({
@@ -10,6 +23,7 @@ $('#file_video').fileinput({
     language: 'pt-BR',
     allowedFileExtensions: ['mp4', 'avi', 'mpg', 'flv', 'mov'],
     maxFileSize: 60000,
+
 });
 
 $('#file_audio').fileinput({

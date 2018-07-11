@@ -1,6 +1,6 @@
 # Clipagem Digital
 
-Versão 1.2 do software de Clipagem Digital.
+Versão 1.4.1 do software de Clipagem Digital.
 
 Esta versão ainda está em constante desenvolvimento.
 
@@ -12,7 +12,7 @@ Na pasta de configurações edite os arquivos database.php e ad.php de acordo co
 
 ### Prerequisites
 
-PHP 5.6 >=
+PHP 7.0 >=
 
 ### Installing
 
