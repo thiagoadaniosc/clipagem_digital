@@ -36,6 +36,12 @@ if (!isset($_SESSION['login']) || $_SESSION['login'] != true) {
                 redirect('/');
             } elseif (routeGet('/api/clipagens')) {
                 FUNCTIONS::jsonClipagens(0,15);
+            } elseif (routeAny('/juntar-pdf')) {
+                getView('arquivos');
+            } elseif (routeAny('/arquivos/juntar')) {
+                FUNCTIONS::joinFilesPDFMerge();
+            } elseif (routeAny('/arquivos/upload')) {
+                echo json_encode('success');
             } else {
                 redirect('/');
             }
@@ -99,11 +105,10 @@ if (!isset($_SESSION['login']) || $_SESSION['login'] != true) {
             } elseif (routeAny('/juntar-pdf')) {
                 getView('arquivos');
             } elseif (routeAny('/arquivos/juntar')) {
-                FUNCTIONS::joinFiles();
+                FUNCTIONS::joinFilesPDFMerge();
             } elseif (routeAny('/arquivos/upload')) {
                 echo json_encode('success');
-            }    
-            elseif (routeGet('/informacoes')) {
+            } elseif (routeGet('/informacoes')) {
                 getView('informacoes');
             } elseif (routeGet('/relatorios')) {
                 $data = [
@@ -116,7 +121,7 @@ if (!isset($_SESSION['login']) || $_SESSION['login'] != true) {
                 ];
                 getView('relatorios', $data);
             } elseif (routeAny('teste')) { 
-                FUNCTIONS::testeFPDF();
+                // FUNCTIONS::testeFPDF();
             } else if(routeGet('/usuarios')){
                 $data = [
                     'usuarios' => FUNCTIONS::dbShowUsers()

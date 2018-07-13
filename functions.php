@@ -214,10 +214,12 @@ public static function criarPDF($fileName, $titulo, $veiculo, $autor, $pagina, $
 public static function joinFiles() {
     $pdf = new setasign\Fpdi\FPDI();
     $fileName = filter_string($_POST['fileName'] . '.pdf');
+    $randNumber = rand(100,20000);
     $pdf->setTitle($fileName, true);
     $pdf->SetAuthor('CMSJ');
     $files = $_FILES['file'];
     $file_flag = 1;
+    $filesToRemove = array();
     // var_dump($files);
     foreach ($files['tmp_name'] as $file) {
         $file_upload_name = 'join_'.$_SESSION['usuario'] . '_'. $file_flag . '.pdf';
@@ -226,20 +228,37 @@ public static function joinFiles() {
         if (file_exists($file_complete_path)) {
             unlink($file_complete_path);
         }
-        move_uploaded_file($file, $file_complete_path); 
+        move_uploaded_file($file, $file_complete_path);
+        array_push($filesToRemove, $file_complete_path); 
         if (file_exists($file_complete_path)) {
             $pageCount = $pdf->setSourceFile($file_complete_path);
             for ($i=1; $i <= $pageCount ; $i++) { 
                 $pdf->addPage();
                 $pageId = $pdf->importPage($i, setasign\Fpdi\PdfReader\PageBoundaries::MEDIA_BOX);
-                $pdf->useImportedPage($pageId, 0,0, 200);
+                $pdf->useImportedPage($pageId);
             }
         }
     }
+    $pdf->Output('I', $fileName);
+    Self::removeFiles($filesToRemove);
 
-    $pdf->Output('I', $fileName);  
 }
 
+public static function joinFilesPDFMerge() {
+    $pdf = new \Clegginabox\PDFMerger\PDFMerger;
+
+    foreach ($_FILES['file']['tmp_name'] as $tempFile){
+        $pdf->addPDF($tempFile, 'all');        
+    }
+    $fileName = filter_string($_POST['fileName'] . '.pdf');
+    $pdf->merge('', $fileName, 'P');
+}
+
+public static function removeFiles(array $filePath){
+    foreach ($filePath as $file) {
+        unlink($file);
+    }
+}
 
 public static function listarClipagens() {
     $conexao = mysqlCon();

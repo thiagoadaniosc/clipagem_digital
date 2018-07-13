@@ -227,6 +227,8 @@
                     <?php 
                     if ($dados['tipo'] == 'link') { // Upload Link
                         $upload_link = $dados['nome'];
+                    } elseif ($dados['tipo'] == 'pdf' || $dados['tipo'] == 'conteudo' || $dados['tipo'] == 'capa') {
+                        $upload_link = '/clipagem/show?fileName=' . $dados['nome'];
                     } else {
                         $upload_link = 'uploads/' . $dados['nome'];
                     }

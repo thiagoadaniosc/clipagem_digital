@@ -9,6 +9,7 @@
         <li>Fix de Bugs.</li>
         <li>Atualizações de Segurança</li>
         <li>Página de Relatórios</li>
+        <li>Ferramenta para junção de arquivos PDF</li>
     </ul>
 
      <h3 class="col-lg-12 mb-3">- Versão 1.4 Stable</h3>
