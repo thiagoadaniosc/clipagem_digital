@@ -3,6 +3,13 @@
 <div class="row col-lg-8 col-xl-4 col-md-8 menuBody" style="overflow-y:  scroll; height: 600px;">
     <h2 class="col-lg-12 text-center mb-5">Atualizações</h2>
 
+    <h3 class="col-lg-12 mb-3">- Versão 1.4.2 Stable</h3>
+    <ul>
+        <li>Atualizações de Emergência</li>
+        <li>Fix de Bugs.</li>
+        <li>Atualizações de Segurança</li>
+    </ul>
+
     <h3 class="col-lg-12 mb-3">- Versão 1.4.1 Stable</h3>
     <ul>
         <li>Mudanças no Layout.</li>

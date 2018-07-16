@@ -38,11 +38,11 @@
 
         <div class=" form-group col-lg-6 justify-content-center ">
             <div class="btn-group" data-toggle="buttons">
-                <label class="btn btn-primary" style="padding: 14px; border-radius: 0;">
-                    <input type="radio" name="tipo" id="option1" autocomplete="off" value="capa">Capa
+                <label class="btn btn-primary" style="padding: 12px; border-radius: 0;">
+                    <input type="radio" name="tipo" id="option1" autocomplete="off" value="capa" style="height: auto!important">Capa
                 </label>
-                <label class="btn btn-primary active" style="padding: 14px; border-radius: 0;">
-                    <input type="radio" name="tipo" id="option2" autocomplete="off" value="conteudo" checked>Conteudo Interno
+                <label class="btn btn-primary active" style="padding: 12px; border-radius: 0;">
+                    <input type="radio" name="tipo" id="option2" autocomplete="off" value="conteudo"  style="height: auto!important" checked>Conteudo Interno
                 </label>
             </div>
         </div>
@@ -58,7 +58,7 @@
 
         <div class="form-group col-lg-12">
             <input id="file" name="file[]" type="file" style="height: 50px;" class="file" data-show-upload="false" data-show-caption="true"
-                data-msg-placeholder="Selecione {arquivos} para a matéria..." multiple required>
+                data-msg-placeholder="Selecione {arquivos} para a matéria..." required>
         </div>
         <div class="form-group col-lg-12">
             <input type="hidden" name="tipo_formato" value="pdf">

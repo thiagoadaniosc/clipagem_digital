@@ -25,14 +25,19 @@ class FUNCTIONS {
     
     public static function uploadArquivos($conexao, $id_clipagem, $fileName){
         if ($_POST['tipo_formato'] == 'pdf') {
-            require_once 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
-            $pdf = new \Clegginabox\PDFMerger\PDFMerger;
+            // require_once 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
+            // $pdf = new \Clegginabox\PDFMerger\PDFMerger;
 
-            foreach ($_FILES['file']['tmp_name'] as $tempFile){
-                $pdf->addPDF($tempFile, 'all');        
-            }
-            $fileName = $fileName . '.pdf';
-            $pdf->merge('file', 'uploads'. DIRECTORY_SEPARATOR . $fileName, 'P');
+            // foreach ($_FILES['file']['tmp_name'] as $tempFile){
+            //     $pdf->addPDF($tempFile, 'all');        
+            // }
+            // $fileName = $fileName . '.pdf';
+            // $pdf->merge('file', 'uploads'. DIRECTORY_SEPARATOR . $fileName, 'P');
+            $extension = 'pdf';
+            $tmp_name = $_FILES['file']['tmp_name'][0];
+            $fileName = $fileName . '.' . $extension;
+            $file_complete_path = dirname( __FILE__ ) . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR .  $fileName;
+            move_uploaded_file($tmp_name, $file_complete_path); 
 
         } elseif($_POST['tipo_formato'] == 'video'){
             $video = $_FILES['file'];
@@ -82,10 +87,10 @@ class FUNCTIONS {
         if ($tipo_formato == 'arquivo') {
             if (empty($_FILES['file']['name'][0]) == false) {
 
-                foreach ($_FILES['file']['tmp_name'] as $tempFile){
-                    $pdf->addPDF($tempFile, 'all');        
-                    echo $tempFile;
-                }
+                // foreach ($_FILES['file']['tmp_name'] as $tempFile){
+                //     $pdf->addPDF($tempFile, 'all');        
+                //     echo $tempFile;
+                // }
                 
                 $date = new DateTime($_POST['data']);
                 
@@ -93,7 +98,17 @@ class FUNCTIONS {
 
                 $fileName = $data . '-' . $id . '.pdf';
                 
-                $pdf->merge('file', 'uploads'. DIRECTORY_SEPARATOR . $fileName, 'P');
+                // $pdf->merge('file', 'uploads'. DIRECTORY_SEPARATOR . $fileName, 'P');
+
+                $extension = 'pdf';
+                $tmp_name = $_FILES['file']['tmp_name'][0];
+                $fileName = $fileName . '.' . $extension;
+                $file_complete_path = dirname( __FILE__ ) . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR .  $fileName;
+
+                if (file_exists($file_complete_path)) {
+                    Self::removeFiles(array($file_complete_path));
+                }
+                move_uploaded_file($tmp_name, $file_complete_path); 
                 
                 $arquivo =  buscarArquivo($conexao, $id);
                 

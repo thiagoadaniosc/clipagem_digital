@@ -51,21 +51,21 @@
                 <?php if ($clipagem['tipo'] == 'capa'): ?>
 
 
-                <label class="btn btn-primary active" style="padding: 14px; border-radius: 0;">
-                    <input type="radio" name="tipo" id="option1" autocomplete="off" value="capa" checked>Capa
+                <label class="btn btn-primary active" style="padding: 12px; border-radius: 0;">
+                    <input type="radio" name="tipo" id="option1" autocomplete="off" style="height: auto!important" value="capa" checked>Capa
                 </label>
 
-                <label class="btn btn-primary" style="padding: 14px; border-radius: 0;">
-                    <input type="radio" name="tipo" id="option2" autocomplete="off" value="conteudo">Conteudo Interno
+                <label class="btn btn-primary" style="padding: 12px; border-radius: 0;">
+                    <input type="radio" name="tipo" id="option2" autocomplete="off" style="height: auto!important" value="conteudo">Conteudo Interno
                 </label>
                 <?php else :?>
 
-                <label class="btn btn-primary" style="padding: 14px; border-radius: 0;">
-                    <input type="radio" name="tipo" id="option1" autocomplete="off" value="capa">Capa
+                <label class="btn btn-primary" style="padding: 12px; border-radius: 0;">
+                    <input type="radio" name="tipo" id="option1" autocomplete="off" style="height: auto!important" value="capa">Capa
                 </label>
 
-                <label class="btn btn-primary active" style="padding: 14px; border-radius: 0;">
-                    <input type="radio" name="tipo" id="option2" autocomplete="off" value="conteudo" checked>Conteudo Interno
+                <label class="btn btn-primary active" style="padding: 12px; border-radius: 0;">
+                    <input type="radio" name="tipo" id="option2" autocomplete="off" style="height: auto!important" value="conteudo" checked>Conteudo Interno
                 </label>
 
                 <?php endif; ?>

@@ -82,7 +82,7 @@
 
         } ?>
 
-        <a data-link="<?= $showLink ?>" id="show-link" class="form-control btn btn-primary col-xl-4 col-lg-4 rounded-0" style="color: white; padding: 14px; border-radius: 0 !important;" onclick="showSubmit()">OK</a>
+        <a data-link="<?= $showLink ?>" id="show-link" class="form-control btn btn-primary col-xl-4 col-lg-4 rounded-0" style="color: white; padding: 12px; border-radius: 0 !important;" onclick="showSubmit()">OK</a>
     </div>
     <div class="form-inline justify-content-end col-xl-9 col-lg-9 col-md-12 col-sm-12">
         <select class="form-control col-xl-2 col-lg-2 col-md-12 col-sm-12" name="pesquisar" style="height: 50px; border-radius: 0">
@@ -111,12 +111,12 @@
             <option value="12">Dezembro</option>
         </select>
         <input class="form-control col-lg-3 col-xl-2 col-md-12 col-sm-12" type="number" name="ano" placeholder="Ano">
-        <button type="submit" class="btn btn-primary form-control col-lg-2 col-xl-2 col-md-12 col-sm-12" style="padding:14px; border-radius: 0">Pesquisar</button>
+        <button type="submit" class="btn btn-primary form-control col-lg-2 col-xl-2 col-md-12 col-sm-12" style="padding:12px; border-radius: 0">Pesquisar</button>
 
     </div>
 </form>
 <?php if( !isset($_GET['show']) || $_GET['show'] <= 100 ): ?>
-    <a href="/pesquisa" class="text-center col-lg-12 print-none" style="padding-left: 20px" target="_blank">Baixar Pesquisa</a>
+    <a href="/pesquisa" class="text-center m-auto print-none" style="padding-left: 20px" target="_blank">Baixar Pesquisa</a>
 <?php else : ?>
     <a href="/" class="text-center col-lg-12 print-none" onclick="alert('Máximo de 100 Arquivos por página.');return false;" style="padding-left: 20px" target="_blank">Baixar Pesquisa</a>
 <?php endif; ?>
@@ -228,7 +228,8 @@
                     if ($dados['tipo'] == 'link') { // Upload Link
                         $upload_link = $dados['nome'];
                     } elseif ($dados['tipo'] == 'pdf' || $dados['tipo'] == 'conteudo' || $dados['tipo'] == 'capa') {
-                        $upload_link = '/clipagem/show?fileName=' . $dados['nome'];
+                        // $upload_link = '/clipagem/show?fileName=' . $dados['nome'];
+                         $upload_link = 'uploads/' . $dados['nome'];
                     } else {
                         $upload_link = 'uploads/' . $dados['nome'];
                     }

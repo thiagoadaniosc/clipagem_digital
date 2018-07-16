@@ -9,9 +9,6 @@
 <script src="themes/explorer-fa/theme.js" type="text/javascript"></script>
 <script src="themes/fa/theme.js" type="text/javascript"></script>
 
-
-
-
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh"
     crossorigin="anonymous"></script>
@@ -77,7 +74,7 @@ $("#file_video").fileinput({
 
 <?php endif; ?>
 
-<script src="js/script.js"></script>
+<script src="js/script.js?version=<?php global $version; echo $version;?>"></script>
 
  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-migrate/3.0.1/jquery-migrate.min.js"></script>
  <script src="http://code.jquery.com/jquery-migrate-3.0.0.js"></script> 
