@@ -6,3 +6,4 @@ require_once "functions.php";
 FUNCTIONS::createDB();
 FUNCTIONS::createDir('uploads');
 FUNCTIONS::createDir('pesquisas');
+FUNCTIONS::createDir('tmp');

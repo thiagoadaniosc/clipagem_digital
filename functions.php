@@ -38,6 +38,9 @@ class FUNCTIONS {
             $fileName = $fileName . '.' . $extension;
             $file_complete_path = dirname( __FILE__ ) . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR .  $fileName;
             move_uploaded_file($tmp_name, $file_complete_path); 
+            if (Self::retrivePDFVersion($file_complete_path) > '1.4')  {
+                Self::convertPDF($file_complete_path);
+            }
 
         } elseif($_POST['tipo_formato'] == 'video'){
             $video = $_FILES['file'];
@@ -109,6 +112,10 @@ class FUNCTIONS {
                     Self::removeFiles(array($file_complete_path));
                 }
                 move_uploaded_file($tmp_name, $file_complete_path); 
+
+                if (Self::retrivePDFVersion($file_complete_path) > '1.4')  {
+                    Self::convertPDF($file_complete_path);
+                } 
                 
                 $arquivo =  buscarArquivo($conexao, $id);
                 
@@ -143,7 +150,9 @@ class FUNCTIONS {
             $extension = pathinfo($video['name'], PATHINFO_EXTENSION);
 
             $fileName = $fileName . '.' . $extension;
-            move_uploaded_file($tmp_name, dirname( __FILE__ ) . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR .  $fileName);                
+            $file_complete_path =  dirname( __FILE__ ) . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR .  $fileName;
+
+            move_uploaded_file($tmp_name, $file_complete_path);          
 
             $arquivo =  buscarArquivo($conexao, $id);
 
@@ -239,7 +248,7 @@ public static function joinFiles() {
     foreach ($files['tmp_name'] as $file) {
         $file_upload_name = 'join_'.$_SESSION['usuario'] . '_'. $file_flag . '.pdf';
         $file_flag++;
-        $file_complete_path = dirname( __FILE__ ) . DIRECTORY_SEPARATOR . 'pesquisas' . DIRECTORY_SEPARATOR . $file_upload_name;
+        $file_complete_path = dirname( __FILE__ ) . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $file_upload_name;
         if (file_exists($file_complete_path)) {
             unlink($file_complete_path);
         }
@@ -259,19 +268,48 @@ public static function joinFiles() {
 
 }
 
-public static function joinFilesPDFMerge() {
-    $pdf = new \Clegginabox\PDFMerger\PDFMerger;
-
-    foreach ($_FILES['file']['tmp_name'] as $tempFile){
-        $pdf->addPDF($tempFile, 'all');        
-    }
-    $fileName = filter_string($_POST['fileName'] . '.pdf');
-    $pdf->merge('', $fileName, 'P');
+public static function convertPDF($filePath) {
+    $command = new \Xthiago\PDFVersionConverter\Converter\GhostscriptConverterCommand();
+    $filesystem = new \Symfony\Component\Filesystem\Filesystem();
+    $converter = new \Xthiago\PDFVersionConverter\Converter\GhostscriptConverter($command, $filesystem, dirname(__FILE__));
+    $converter->convert($filePath, '1.4');
+    Self::retrivePDFVersion($filePath);
 }
+
+
+public static function retrivePDFVersion($filePath) {
+    $guesser = new \Xthiago\PDFVersionConverter\Guesser\RegexGuesser();
+    return $guesser->guess($filePath);
+}
+
+public static function joinFilesPDFMerge() {
+    try {
+        $pdf = new \Clegginabox\PDFMerger\PDFMerger;
+        $filesToRemove = array();
+        foreach ($_FILES['file']['tmp_name'] as $tempFile){
+            $file_tmp_name = md5(uniqid()) . '.pdf';
+            $file_complete_path = dirname(__FILE__) . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $file_tmp_name;
+            move_uploaded_file($tempFile, $file_complete_path);
+            array_push($filesToRemove, $file_complete_path);
+            if (Self::retrivePDFVersion($file_complete_path) > '1.4')  {
+                Self::convertPDF($file_complete_path);
+             }
+            $pdf->addPDF($file_complete_path, 'all');        
+        }
+        
+        $fileName = filter_string($_POST['fileName'] . '.pdf');
+        $pdf->merge('', $fileName, 'P');
+        Self::removeFiles(array($filesToRemove));
+    } catch (Exception $e) {
+        echo $e->getMessage();
+        redirect('/juntar-pdf');
+    }
+}
+
 
 public static function removeFiles(array $filePath){
     foreach ($filePath as $file) {
-        unlink($file);
+        unlink($file[0]);
     }
 }
 

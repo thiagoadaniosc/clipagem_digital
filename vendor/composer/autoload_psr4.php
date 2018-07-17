@@ -8,4 +8,8 @@ $baseDir = dirname($vendorDir);
 return array(
     'setasign\\Fpdi\\' => array($vendorDir . '/setasign/fpdi/src'),
     'fpdi\\' => array($vendorDir . '/itbz/fpdi/src'),
+    'Xthiago\\PDFVersionConverter\\' => array($vendorDir . '/xthiago/pdf-version-converter/src', $vendorDir . '/xthiago/pdf-version-converter/tests'),
+    'Symfony\\Polyfill\\Ctype\\' => array($vendorDir . '/symfony/polyfill-ctype'),
+    'Symfony\\Component\\Process\\' => array($vendorDir . '/symfony/process'),
+    'Symfony\\Component\\Filesystem\\' => array($vendorDir . '/symfony/filesystem'),
 );

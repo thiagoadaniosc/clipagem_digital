@@ -3,6 +3,7 @@
         "itbz/fpdi": "dev-master",
         "clegginabox/pdf-merger": "dev-master",
         "setasign/fpdi": "^2.0",
-        "setasign/fpdf": "^1.8"
+        "setasign/fpdf": "^1.8",
+        "xthiago/pdf-version-converter": "^1.0"
     }
 }
